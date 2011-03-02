@@ -18,8 +18,6 @@ def vim_config_install
   sh "cp -r ./vim ~/.vim"
 end
 
-VIMDIR=File.expand_path("~/.vim/")
-
 def ensure_vimdir
   unless File.directory? VIMDIR
     Dir.mkdir VIMDIR
@@ -33,6 +31,7 @@ task :install_linux => [:genrc] do
   vim_config_install
 end
 
+desc "install mac"
 task :install_mac => [:gen_mac] do
   ensure_vimdir
   transform(:mac)
