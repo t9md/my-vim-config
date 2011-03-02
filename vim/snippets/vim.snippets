@@ -1,0 +1,126 @@
+snippet ano
+	let fun = {}
+	fun! fun.call(e)
+		return ${1:a:e}
+	endfun
+snippet os?
+	let ostype = ""
+	if      has('win32') || has('win64')
+		let ostype = "win"
+	elseif has('mac')
+		let ostype = "mac_old"
+	elseif has('macunix')
+		let ostype = "mac_osx"
+	elseif has('gui_macvim')
+		let ostype = "mac_vim"
+	endif
+	${1}
+snippet fun
+	function! ${1:Name}()
+		{VISUAL}${2}
+	endfunction
+snippet testc
+	call _countUP()
+
+	${1: "test here}
+
+	finish
+snippet com
+	command! ${1:-nargs=}${2:1} ${3:CommandName} :call $3(${4:<q-args>})${5}
+snippet log
+	echomsg ${1}
+snippet fr?
+	if !filereadable(${1:file})
+		${2:return}
+	endif
+	${3}
+snippet edit
+	execute "edit " ${1:file}
+snippet chkopt
+	if empty(a:1)
+	  ${1:echo "empty"}
+	else
+	  ${2:echo "not empty"}
+	endif
+snippet head
+	" ${1:Feature}: {{{
+	"============================================================
+	${2:body}
+	" }}}
+snippet eh
+	echo "${1:meesages here}"
+	${2}
+snippet km
+	nnoremap <silent> ${1:orig} :${2:mapped}<CR>
+snippet bl
+	belowright split
+snippet fi
+	finish
+snippet tmpl vim plugin convention
+	if exists('${1:did_`Filename()`}') || &cp${2: || version < 700}
+		finish
+	endif
+	let $1 = 1${3}
+
+	"for line continuation - i.e dont want C in &cpo
+	let s:old_cpo = &cpo
+	set cpo&vim
+
+
+		${4:"TODO body here"}
+
+
+	"reset &cpo back to users setting
+	let &cpo = s:old_cpo
+	" vim: set sw=4 sts=4 et fdm=marker:
+snippet split
+	let result = split(system(cmd), "\n")
+snippet ife?
+	if !exists("${1:g:var}")
+	    let $1 = ${2:"here"}
+	endif
+snippet {
+	{{{
+snippet }
+	}}}
+snippet |
+	|${1}|
+	${2}
+	
+snippet meth
+	let ${1:obj} = {}
+	fun! $1.init()
+	    " Instance methods {{{
+	    fun! self.im()
+	        let o = {}
+	        " code here
+	        return o
+	    endfun
+	    "}}}
+	    
+	    " Class methods {{{
+	    fun! self.cm()
+	        let o = {}
+	        " code here
+	        return o
+	    endfun
+	    "}}}
+	
+	    let self.im = self.im()
+	    let self.cm = self.cm()
+	endfun
+	call $1.init()
+
+snippet tes
+	fun! clbk.call()
+		${2:"test here}
+	endfun
+	call Test("${1:TestName}", clbk)
+snippet spec
+	call vspec#customize_matcher('${1:type}', function('is$1'))${2}
+snippet speco
+	call vspec#customize_matcher('${1:type}', function('is$1'))${2}
+snippet ex
+	exists(${1:var})
+snippet si
+	silent 
