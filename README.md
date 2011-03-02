@@ -30,7 +30,7 @@ change following setting in .vimrc
 
     let g:phrase_dir = "$HOME/.vim/phrase/YOURNAME"
 
-set g:swap_colon_and_semicolon to '0' if you user Japanese keyboard
+set g:swap_colon_and_semicolon to '0' if you use Japanese keyboard
 
     let g:swap_colon_and_semicolon           = 0
 
@@ -229,6 +229,7 @@ Visual　モードで `T` を押すと、選択範囲を tryit ファイルに p
     let g:tryit_dir = "$HOME/.vim/tryit"
     nnoremap <silent> T  :TryIt<CR>
     vnoremap <silent> T  :TryItSelection<CR>
+    nnoremap <silent> <Space>t  :TryItInteractive<CR>
 
 
 Phrase.vim
@@ -239,14 +240,12 @@ Phrase.vim
 `Visual-M` で 選択範囲を新しくPhraseFileに登録する。
 
 ### key
-    <Space>pl  PhraseList を開く
+   <Space>p    :PhraseList<CR>
     M          (Normal)Phraseファイルを開く
     M          (Visual)選択範囲からPhraseを作成
 
 ### setting
-    nnoremap <silent> <Space>pl  :PhraseList<CR>
-    vnoremap <silent> <Space>pl  :<C-u>PhraseList<CR>
-
+    nnoremap <silent> <Space>p  :PhraseList<CR>
     nnoremap <silent> M  :PhraseEdit<CR>
     vnoremap <silent> M  :PhraseCreate<CR>
 
