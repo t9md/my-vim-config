@@ -1,10 +1,34 @@
 VIMDIR=File.expand_path('~/.vim')
 
-def transform(platform)
+def ensure_vimdir
+  unless File.directory? VIMDIR
+    Dir.mkdir VIMDIR
+  end
+end
+
+def help
+  puts
+  puts " # Linux"
+  puts " rake install os=linux"
+  puts
+  puts " # Mac"
+  puts " rake install os=mac"
+  puts
+end
+
+task :check do
+  $os=ENV['os']
+  unless ["mac", "linux"].include? $os
+    help
+    exit 1
+  end
+end
+
+task :prepare_config => [:check] do
   ['gvimrc.vim', 'vimrc.vim' ].each do |file|
     s = File.read(file)
     s = s.gsub('git@:github.com:t9md','git://github.com/t9md')
-    if platform == :mac
+    if $os == "mac"
       s = s.gsub('M-', 'D-')
     end
     outfile = "dot.#{file}"
@@ -12,28 +36,10 @@ def transform(platform)
   end
 end
 
-def vim_config_install
-  sh "cp #{dot.gvimrc} ~/.gvimrc"
-  sh "cp #{dot.vimrc}  ~/.vimrc"
+desc "install"
+task :install => [:check, :prepare_config ] do
+  ensure_vimdir
+  sh "mv dot.gvimrc ~/.gvimrc"
+  sh "mv dot.vimrc  ~/.vimrc"
   sh "cp -r ./vim ~/.vim"
-end
-
-def ensure_vimdir
-  unless File.directory? VIMDIR
-    Dir.mkdir VIMDIR
-  end
-end
-
-desc "install linux"
-task :install_linux => [:genrc] do
-  ensure_vimdir
-  transform(:linux)
-  vim_config_install
-end
-
-desc "install mac"
-task :install_mac => [:gen_mac] do
-  ensure_vimdir
-  transform(:mac)
-  vim_config_install
 end

@@ -2,25 +2,29 @@ Setup
 ====================
 
 ### backup your current vim config
+
     $ cd ~/
     $ mkdir vim_backup
     $ mv .vimrc .gvimrc .vim vim_backup
 
 ### create new vim config dir
+
     $ git clone git://github.com/t9md/my-vim-config.git 
 
-### linux
-    $ rake install_linux
+### install
 
-### mac
-    $ rake install_mac
+    $ rake install os=linux
+  or
+    $ rake install os=mac
 
 ### install bundles(vim-plugin)
+
     $ wget http://github.com/bronson/vim-update-bundles/raw/master/vim-update-bundles
     $ ruby vim-update-bundles
 
 Setting
 ====================
+
 change following setting in .vimrc
 
     let g:phrase_dir = "$HOME/.vim/phrase/YOURNAME"
