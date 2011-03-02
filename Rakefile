@@ -27,7 +27,7 @@ end
 task :prepare_config => [:check] do
   ['gvimrc.vim', 'vimrc.vim' ].each do |file|
     s = File.read(file)
-    s = s.gsub('git@:github.com:t9md','git://github.com/t9md')
+    s = s.gsub('git@github.com:t9md','git://github.com/t9md')
     if $os == "mac"
       s = s.gsub('M-', 'D-')
     end
@@ -39,7 +39,7 @@ end
 desc "install"
 task :install => [:check, :prepare_config ] do
   ensure_vimdir
-  sh "mv dot.gvimrc ~/.gvimrc"
-  sh "mv dot.vimrc  ~/.vimrc"
-  sh "cp -r ./vim ~/.vim"
+  sh "mv dot.gvimrc.vim ~/.gvimrc"
+  sh "mv dot.vimrc.vim  ~/.vimrc"
+  sh "cp -r ./vim/* ~/.vim/"
 end

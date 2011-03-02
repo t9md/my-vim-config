@@ -10,6 +10,7 @@ Setup
 ### create new vim config dir
 
     $ git clone git://github.com/t9md/my-vim-config.git 
+    $ cd my-vim-config
 
 ### install
 
