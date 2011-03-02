@@ -757,7 +757,7 @@ endif
 
 " Vim Bundle {{{
 " Generally Useful:
-" Bundle: git://github.com/scrooloose/nerdtree.git
+" Bundle: git://github.com/scrooloose/nerdtree.git 4.1.0
 " # Bundle: git://github.com/vim-scripts/bufexplorer.zip.git
 " Bundle: git://github.com/bronson/vim-closebuffer.git
 " Bundle: git://github.com/vim-scripts/IndexedSearch.git
