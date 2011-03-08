@@ -28,7 +28,7 @@ Setting
 
 change following setting in .vimrc
 
-    let g:phrase_dir = "$HOME/.vim/phrase/YOURNAME"
+    let g:phrase_author = "YOURNAME"
 
 set g:swap_colon_and_semicolon to '0' if you use Japanese keyboard
 
@@ -115,11 +115,15 @@ NERDCommenter
     M-; (Normal)現在行のコメントをトグル
     F3  (Visual)選択範囲のコメントをトグル
     M-; (Visual)選択範囲のコメントをトグル
+    <Space>;　(Normal)同じ
+    <Space>;  (Visual)同じ
 
 ### setting
     nmap     <silent> <F3>  <plug>NERDCommenterToggle
     vmap     <silent> <F3>  <plug>NERDCommenterToggle
 
+    nnoremap <silent> <Space>; :call NERDComment(0, "toggle")<CR>
+    vnoremap <silent> <Space>; :call NERDComment(0, "toggle")<CR>
     nnoremap <silent> <M-;>      :call NERDComment(0, "toggle")<CR>
     vnoremap <silent> <M-;>      :call NERDComment(0, "toggle")<CR>
     inoremap <silent> <M-;> <C-o>:call NERDComment(0, "toggle")<CR>
@@ -128,11 +132,11 @@ NERDTree
 ----------------------------------
 今開いているファイルを NERDTree 上に表示する。
 
-
 ### key
     <M-R>
     <M-n>
     <Space>n
+    H
 
 ### setting
     nnoremap <silent> <M-R> :NERDTreeFind<CR>
@@ -240,12 +244,12 @@ Phrase.vim
 `Visual-M` で 選択範囲を新しくPhraseFileに登録する。
 
 ### key
-   <Space>p    :PhraseList<CR>
+    <Space>p   Unite phrase
     M          (Normal)Phraseファイルを開く
     M          (Visual)選択範囲からPhraseを作成
 
 ### setting
-    nnoremap <silent> <Space>p  :PhraseList<CR>
+    nnoremap <silent> <Space>p  :<C-u>Unite phrase -start-insert<CR>
     nnoremap <silent> M  :PhraseEdit<CR>
     vnoremap <silent> M  :PhraseCreate<CR>
 
@@ -257,3 +261,61 @@ Ref
     command! -nargs=? Perldoc :call ref#ref("perldoc " . <q-args>)
     command! -nargs=? Erlang  :call ref#ref("erlang " . <q-args>)
 
+Unite
+----------------------------------
+### key
+    C-p             file mru
+    <Space><Space>  buffer
+    <Space>o        outline
+    <Space>ul       line
+    <Space>p        phrase
+    <Space>urm      ref/man
+    <Space>urr      ref/refe
+    <Space>urp      ref/pydoc
+
+### setting
+
+    let g:unite_enable_start_insert = 1
+    let g:unite_split_rule="botright"
+    let g:unite_enable_split_vertically = 0
+    nnoremap [unite] <Nop>
+    nmap     <M-u>   [unite]
+    nmap     U       [unite]
+    nmap     <Space>u   [unite]
+
+    nnoremap [unite]u           :<C-u>Unite<Space>
+    nnoremap [unite]<M-u>       :<C-u>Unite file_mru<CR>
+    " nnoremap <silent> [unite]f  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
+    nnoremap <silent> [unite]f  :<C-u>UniteWithCurrentDir file_rec -buffer-name=files<CR>
+    nnoremap <silent> [unite]d  :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
+    nnoremap <silent> [unite]m  :<C-u>Unite file_mru<CR>
+    nnoremap <silent> [unite]l  :<C-u>Unite lines<CR>
+    nnoremap <silent> [unite]t  :<C-u>UniteWithCursorWord tag -vertical<CR>
+    nnoremap <silent> <Space>g  :<C-u>UniteWithCursorWord tag -vertical<CR>
+
+    nnoremap <silent> [unite]b  :<C-u>Unite bookmark<CR>
+    nnoremap <silent> [unite]rm  :<C-u>UniteWithCursorWord -start-insert ref/man<CR>
+    nnoremap <silent> [unite]rr  :<C-u>UniteWithCursorWord -start-insert ref/refe<CR>
+    nnoremap <silent> [unite]rp  :<C-u>UniteWithCursorWord -start-insert ref/pydoc<CR>
+
+    nnoremap <silent> [unite]p  :<C-u>Unite phrase -start-insert<CR>
+    nnoremap <silent> [unite]o  :<C-u>Unite outline -start-insert<CR>
+
+    nnoremap <silent> <Space>p  :<C-u>Unite phrase -start-insert<CR>
+    nnoremap <silent> <Space>o  :<C-u>Unite outline -start-insert<CR>
+    nnoremap <silent> <Space>b  :<C-u>Unite bookmark<CR>
+    nnoremap <silent> <Space><Space> :<C-u>Unite -start-insert buffer<CR>
+    nnoremap <silent> <C-p> :<C-u>Unite file_mru -buffer-name=files<CR>
+
+CommandT
+----------------------------------
+* install
+    if which rvm >/dev/null 2>&1; then rvm system exec rake make; else rake make; fi
+
+### key
+    <Space>f   現在のディレクトリから
+    <Space>F   バッファのディレクトリから
+
+### setting
+    nnoremap <Space>f :CommandT<CR>
+    nnoremap <Space>F :CommandT %:p:h<CR>
