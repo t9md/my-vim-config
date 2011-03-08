@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# 2011-03-08 17:39:33
+# Author: t9md
 $tags = []
 
 REG_PUPPET_CLASS  = /\s*class\s+([-0-9A-Za-z_:]+)[(]?/
