@@ -1,5 +1,7 @@
 VIMDIR=File.expand_path('~/.vim')
 
+task :default => "help"
+
 def ensure_vimdir
   unless File.directory? VIMDIR
     Dir.mkdir VIMDIR
@@ -16,6 +18,10 @@ def help
   puts
 end
 
+task :help do
+  help
+end
+
 task :check do
   $os=ENV['os']
   unless ["mac", "linux"].include? $os
@@ -24,6 +30,7 @@ task :check do
   end
 end
 
+desc "prepare_config"
 task :prepare_config => [:check] do
   ['gvimrc.vim', 'vimrc.vim' ].each do |file|
     s = File.read(file)

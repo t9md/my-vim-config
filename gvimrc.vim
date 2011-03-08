@@ -90,7 +90,14 @@ hi PmenuSel                      guibg=#808080
 hi PmenuSbar                     guibg=#080808
 hi PmenuThumb      guifg=#66D9EF
 
-colorscheme molokai
+" colorscheme molokai
+colorscheme lucius
+" colorscheme newspaper
+" colorscheme pyte
+" colorscheme desert256
+" colorscheme zenburn
+" colorscheme xoria256
+" colorscheme kellys
 " colorscheme railscasts
 " colorscheme vividchalk
 " colorscheme manuscript
@@ -98,3 +105,9 @@ colorscheme molokai
 " colorscheme desert
 " colorscheme ir_black
 " colorscheme rdark
+
+" for NERDtree
+if g:colors_name == "molokai"
+  highlight Special guifg=#66D9EF guibg=bg gui=NONE
+end
+

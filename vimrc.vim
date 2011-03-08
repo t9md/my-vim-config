@@ -1,5 +1,5 @@
 "=================================================
-" vim: set sw=4 sts=4 et fdm=marker fdc=3 fdl=1:
+" vim: set sw=4 sts=4 et fdm=marker fdc=3 fdl=5:
 "=================================================
 let g:Is_unix  = has('unix')
 let g:Is_mac   = has('gui_macvim')
@@ -9,11 +9,7 @@ let g:GUI_MODE = has("gui_running") ? 1 : 0
 
 filetype off
 let g:pathogen_disabled = [
-            \ "endwise",
             \ "textobj-between",
-            \ "YAIFA",
-            \ "ManPageView",
-            \ "minibufexpl.vim",
             \ "trailing-whitespace"
             \ ]
 call pathogen#runtime_append_all_bundles()
@@ -24,30 +20,26 @@ let $VIMDIR=$HOME."/.vim"
 filetype indent plugin on
 syntax on
 set nocompatible
+
+" set clipboard=unnamed,autoselect
 set clipboard=unnamed
+
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
-set incsearch " do incremental searching
-set hlsearch
-set noshowmatch
-set matchtime=2
+set incsearch hlsearch noshowmatch matchtime=2
 set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-set ignorecase
-set smartcase
-set autoindent
+set ignorecase smartcase autoindent
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']['.&ft.']'}%=%l,%c%V%8P
 set laststatus=2 "ステータスラインを常に表示
-set wildmenu
-set helplang=en,ja
-set showtabline=1 " show tab page when at least two tab exist"
+set wildmenu helplang=en,ja showtabline=1
 set hidden
 set grepprg=grep\ -n\ $*\ /dev/null\ --exclude\ \"\*\.svn\*\"
-set history=1000         " remember more commands and search history
-set undolevels=1000      " use many muchos levels of undo
+set history=1000 undolevels=1000
+set title                " change the terminal's title
+
 set wildignore&
 set wildignore+=*.swp,*.bak,*.pyc,*.pyo,*.class
-set title                " change the terminal's title
 set visualbell t_vb=
 set noerrorbells         " don't beep
 
@@ -70,18 +62,26 @@ if exists('&ambiwidth')
 endif
 "}}}
 
+" Local Setting {{{
+let $RUBYLIB=$VIMDIR."/util/rubylib"
+if !exists("s:path_set")
+    if g:Is_mac
+        let $PATH=$VIMDIR."/bin:".$HOME."/local/bin:".$HOME."/local/npm/bin:"."/opt/local/bin:/opt/local/sbin:".$PATH
+    endif
+
+    if g:Is_linux
+        let $PATH=$VIMDIR."/bin:".$HOME."/local/bin:".$HOME."/local/npm/bin:"."/var/lib/gems/1.8/bin:".$PATH
+    endif
+    let s:path_set = 1
+endif
 if Is_mac
     let $RUBY_DLL = "/Users/taqumd/.rvm/rubies/ruby-1.8.7-p302/lib/libruby.dylib"
 endif
+"}}}
 
 if g:Is_mac
     let macvim_skip_cmd_opt_movement = 1
 endif
-
-
-" SnipMate {{{
-let g:my_snippets_dir = "$HOME/.vim/snippets"
-"}}}
 
 " Flag to tweek behavior {{{
 let g:select_win_with_Contrl_hjkl        = 1
@@ -96,31 +96,16 @@ let g:move_selection_with_Control_hjkl   = 1
 
 " GUI Specific {{{
 "-----------------------------------------------------------------
-" CoffeeScript Like {{{
-autocmd FileType coffee nnoremap  <buffer> <silent> <M-R> :QuickRun<CR>
-autocmd FileType coffee inoremap  <buffer> <silent> <M-R> <C-o>:QuickRun<CR>
-autocmd FileType coffee vnoremap  <buffer> <silent> <M-R> :QuickRun<CR>
-autocmd FileType coffee nnoremap  <buffer> <silent> <M-r> :QuickRun 'coffee -cp --no-wrap'<CR>
-autocmd FileType coffee inoremap  <buffer> <silent> <M-r> <C-o>:QuickRun 'coffee -cp --no-wrap'<CR>
-autocmd FileType coffee vnoremap  <buffer> <silent> <M-r> :QuickRun 'coffee -cp --no-wrap'<CR>
-"}}}
-
-autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
-" autocmd FileType python inoremap <buffer> <silent> <C-Space> <C-x><C-o>
-
-" autocmd BufWritePost *.rb silent make -c %
-autocmd FileType ruby noremap  <buffer> <silent> <M-r> moHmt:%call Xmpfilter()<CR>'tzt`o
-autocmd FileType ruby inoremap <buffer> <silent> <M-r> <Esc>moHmt:%call Xmpfilter()<CR>'tzt`oa
-autocmd FileType ruby vnoremap <buffer> <silent> <M-r> :call Xmpfilter()<CR>
-autocmd FileType ruby noremap  <buffer> <silent> <M-m> :call XmpCommentToggle()<CR>
-autocmd FileType ruby inoremap <buffer> <silent> <M-m> <C-o>:call XmpCommentToggle()<CR>
-autocmd FileType ruby vnoremap <buffer> <M-x>r      :RubyBlockSwitch<CR>
-autocmd FileType ruby nnoremap <buffer> <M-x>r      :RubyBlockSwitch<CR>
-"}}}
 
 " Color and ColorScheme {{{
 "-------------------------------------------------
-colorscheme molokai
+" colorscheme molokai
+" colorscheme pyte
+" colorscheme newspaper
+colorscheme lucius
+" colorscheme kellys
+" colorscheme twilight2
+" colorscheme github256
 " colorscheme vividchalk
 " colorscheme railscasts
 " colorscheme skittles_dark
@@ -130,11 +115,11 @@ set t_Co=256
 set t_Sb=[4%dm
 set t_Sf=[3%dm
 
-highlight Folded     ctermfg=117 ctermbg=NONE  guifg=Grey70 guibg=NONE
-highlight FoldColumn ctermfg=117 ctermbg=NONE  guifg=Grey70 guibg=#000000
-highlight SignColumn ctermfg=117 ctermbg=NONE  guifg=Grey70 guibg=#000000
-highlight NonText    ctermfg=244 guifg=#4a4a59
-highlight SpecialKey ctermfg=244 guifg=#4a4a59
+" highlight Folded     ctermfg=117 ctermbg=NONE  guifg=Grey70 guibg=NONE
+" highlight FoldColumn ctermfg=117 ctermbg=NONE  guifg=Grey70 guibg=#000000
+" highlight SignColumn ctermfg=117 ctermbg=NONE  guifg=Grey70 guibg=#000000
+" highlight NonText    ctermfg=244 guifg=#4a4a59
+" highlight SpecialKey ctermfg=244 guifg=#4a4a59
 
 "}}}
 
@@ -195,17 +180,15 @@ inoremap <silent> <M-r> <C-o>:<C-u>QuickRun<CR>
 
 nnoremap <M-t>      :<C-u>tabnew<CR>
 nnoremap <M-T>      <C-w>T
-" nnoremap <M-f>f     :CommandT<CR>
 
 " nnoremap <M-f><M-g> :Occur<CR>
-cnoremap <M-o> <CR>:Occur<CR>
-cnoremap <C-o> <CR>:Occur<CR>
+" cnoremap <M-o> <CR>:Occur<CR>
+" cnoremap <C-o> <CR>:Occur<CR>
 
 " code fold movement
 nnoremap <M-z> za
-nnoremap <M-P> zk
-nnoremap <M-N> zj
-nnoremap <M-O> za
+nnoremap <M-p> zk
+nnoremap <M-n> zj
 
 nnoremap <M-a> ggVG
 " Tab movement
@@ -223,14 +206,22 @@ endif
 " Save in insertmode by <M-s>
 inoremap <M-s> <C-o>:<C-u>write<CR>
 nnoremap <silent> <M-R> :NERDTreeFind<CR>
-nnoremap <silent> <M-n> :NERDTreeFind<CR>
+" nnoremap <silent> <M-n> :NERDTreeFind<CR>
 
 " close window
-nnoremap <M-w> :wincmd q<CR>
-vnoremap <M-w> :wincmd q<CR>
-vnoremap <M-c> y
-nnoremap <M-v> p
-vnoremap <M-v> p
+nnoremap <silent> <M-w> :wincmd q<CR>
+vnoremap <silent> <M-w> :wincmd q<CR>
+
+if g:Is_linux
+  nnoremap <M-v> "+gP
+  vnoremap <M-c> "+y
+  vnoremap <M-x> "+x
+  inoremap <M-v> <ESC>"+gPa
+else
+  vnoremap <M-c> y
+  nnoremap <M-v> p
+  vnoremap <M-v> p
+endif
 
 nnoremap <Space>v ggVG
 nnoremap <silent> <Space>/ :nohlsearch<CR>
@@ -247,10 +238,7 @@ nmap     <silent> <Leader>f  <Plug>(CheckFileTypeAtCursor)
 
 nnoremap <silent> M  :PhraseEdit<CR>
 vnoremap <silent> M  :PhraseCreate<CR>
-nnoremap <silent> <Space>p  :PhraseList<CR>
-" nnoremap <silent> <Space>pe  :PhraseEdit<CR>
-" vnoremap <silent> <Space>pe  :PhraseEdit<CR>
-" vnoremap <silent> <Space>pc  :PhraseCreate<CR>
+" nnoremap <silent> <Space>p  :PhraseList<CR>
 
 if g:select_win_with_Contrl_hjkl
     nnoremap <silent> <C-h> :wincmd h<CR>
@@ -289,11 +277,6 @@ if g:swap_colon_and_semicolon
     noremap :     ;
 endif
 
-" if g:Is_mac
-    " nnoremap <space>d  :DictionaryApp <C-r><C-w><CR>
-    " vnoremap <space>d  y:DictionaryApp <C-r>"<CR>
-" endif
-
 nnoremap gc `[V`]
 vnoremap gc :<C-u>normal gc<CR>
 onoremap gc :<C-u>normal gc<CR>
@@ -317,13 +300,13 @@ nnoremap <Space>.  :<C-u>edit   $MYVIMRC<CR>
 nnoremap <Space>e  :<C-u>edit   $HOME/.vimperatorrc<CR>
 nnoremap <Space>s. :<C-u>source $MYVIMRC<CR>:echo ".vimrc sourced!"<CR>
 
-nnoremap <Space>f :CommandT %:p:h<CR>
-nnoremap <Space>F :CommandT<CR>
+nnoremap <Space>F :CommandT %:p:h<CR>
+nnoremap <Space>f :CommandT<CR>
 
 " snipmate helper
 nnoremap <silent> <Space>se  :<C-u>SnippetsEdit<CR>
 nnoremap <silent> <Space>sE  :<C-u>SnippetsEdit 
-nnoremap <silent> <Space>sr  :<C-u>SnippetsReload<CR>
+" nnoremap <silent> <Space>sr  :<C-u>SnippetsReload<CR>
 
 " close window easily
 nnoremap <silent> <Space>q :wincmd q<CR>
@@ -341,6 +324,7 @@ nmap _     <Plug>(ResizeWinMaxH)
 nmap <bar> <Plug>(ResizeWinMaxV)
 nmap F     <Plug>(ResizeWinMaxHV)
 nmap     <M-f>     <Plug>(ResizeWinMaxHV)
+nmap     <M-o>     <Plug>ZoomWin
 nmap     <M-F>     <Plug>(ResizeWinMinV)
 " nmap     <M-\|>     <Plug>(ResizeWinMinV)
 " nmap     <M-_>     <Plug>(ResizeWinMinV)
@@ -353,6 +337,10 @@ nnoremap <silent> L V
 vnoremap <silent> L ip
 vnoremap <silent> V ip
 vnoremap <silent> <CR> <Esc>
+
+nnoremap <silent> <Space>H H
+nnoremap <silent> <Space>M M
+nnoremap <silent> <Space>L L
 
 nnoremap <silent> <Space>; :call NERDComment(0, "toggle")<CR>
 vnoremap <silent> <Space>; :call NERDComment(0, "toggle")<CR>
@@ -370,6 +358,11 @@ nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
 set scrolloff=3
 set nowrap
+
+" ExitInsertMode: Alternative keybinding
+inoremap jj <Esc>
+inoremap <C-j> <Esc>
+
 "}}}
 
   " Function and Command {{{
@@ -398,8 +391,9 @@ function! ToggleOption(optname,...) "{{{
 endfunction "}}}
 command! PasteToggle :call ToggleOption('paste', "Paste Mode: ")
 command! WrapToggle  :call ToggleOption('wrap')
-command! -nargs=* -complete=mapping AllMaps map <args> | map! <args> | lmap <args>
 command! NumberToggle  :call ToggleOption('number')
+command! SpellToggle  :call ToggleOption('spell')
+command! -nargs=* -complete=mapping AllMaps map <args> | map! <args> | lmap <args>
 
 command! Cp932     edit ++enc=cp932
 command! Eucjp     edit ++enc=euc-jp
@@ -414,6 +408,8 @@ command! SudoWrite write !sudo tee %
 command! HelptagUpdate call pathogen#helptags()
 command! DisableEndwizeCR inoremap <buffer> <silent> <CR> <CR>
 command! EnableEndwizeCR iunmap <buffer> <CR>
+
+" }}}
 
 " vimcasts {{{
 " Set tabstop, softtabstop and shiftwidth to the same value
@@ -454,10 +450,6 @@ augroup InsModeAu
     autocmd! InsertLeave * set imdisable
 augroup END
 
-" augroup MiniBuffExproler
-    " autocmd!
-" augroup END
-
 augroup my_config
     autocmd!
 
@@ -470,12 +462,12 @@ augroup my_config
                 \ endif
 
     au BufNewFile,BufReadPost .vimrc nnoremap <buffer> <M-r> :so %<CR>
-    au BufNewFile,BufReadPost about_*.py nnoremap <buffer> <M-r> :python anything.run(py_koan)<CR>
-    au BufNewFile,BufReadPost vim_util.rb nnoremap <buffer> <M-r> :rubyfile %<CR>
-    au BufNewFile,BufReadPost ac_source_cmd.py nnoremap <buffer> <M-r> :pyfile %<CR>
-    au BufNewFile,BufReadPost ac_source_buffer.py nnoremap <buffer> <M-r> :pyfile %<CR>
-    au BufNewFile,BufReadPost anything.py nnoremap <buffer> <M-r> :pyfile %<CR>
-    au BufNewFile,BufReadPost py-anything.vim nnoremap <buffer> <M-r> :so %<CR>
+    " au BufNewFile,BufReadPost about_*.py nnoremap <buffer> <M-r> :python anything.run(py_koan)<CR>
+    " au BufNewFile,BufReadPost vim_util.rb nnoremap <buffer> <M-r> :rubyfile %<CR>
+    " au BufNewFile,BufReadPost ac_source_cmd.py nnoremap <buffer> <M-r> :pyfile %<CR>
+    " au BufNewFile,BufReadPost ac_source_buffer.py nnoremap <buffer> <M-r> :pyfile %<CR>
+    " au BufNewFile,BufReadPost anything.py nnoremap <buffer> <M-r> :pyfile %<CR>
+    " au BufNewFile,BufReadPost py-anything.vim nnoremap <buffer> <M-r> :so %<CR>
     au BufNewFile,BufRead *.json set filetype=json
     au BufNewFile,BufRead *vimperator-*.tmp set filetype=textile
     au BufNewFile,BufRead /tmp/*.eml set filetype=markdown | nnoremap <buffer> <silent> <M-w> :bd!<CR>| DisableEndwizeCR
@@ -491,7 +483,9 @@ augroup my_config
     autocmd FileType help nnoremap <buffer> <Return> <C-]>
     autocmd FileType help nnoremap <buffer> <BS>     <C-t>
     autocmd FileType help nnoremap <buffer> .j  /\|[^ \|]\+\|<CR>
-    autocmd FileType help vnoremap <buffer> <silent> <F5> :QuickRun vim<CR>
+    " autocmd FileType help vnoremap <buffer> <silent> <F5> :QuickRun vim<CR>
+    " autocmd FileType help vnoremap <buffer> <silent> b:quickrun_config = {} |let b:quickrun_config = {'command': 'vim' }
+    au BufNewFile,BufReadPost *.node.js let b:quickrun_config = {}  | let b:quickrun_config = { 'command': 'node' }
 
     autocmd FileType c set ts=4 sw=4
 
@@ -500,12 +494,12 @@ augroup my_config
     autocmd FileType haml        setlocal ts=2 sts=2 sw=2 expandtab
     autocmd FileType sass        setlocal ts=2 sts=2 sw=2 expandtab
     autocmd FileType css         setlocal ts=2 sts=2 sw=2 expandtab
+    autocmd FileType javascript  setlocal ts=2 sts=2 sw=2 expandtab
     autocmd FileType coffee      setlocal ts=2 sts=2 sw=2 expandtab
     autocmd FileType coffee nnoremap <buffer> <silent> <S-F5> :QuickRun 'coffee -cp --no-wrap'<CR>
     autocmd FileType coffee inoremap <buffer> <silent> <S-F5> <C-o>:QuickRun 'coffee -cp --no-wrap'<CR>
     autocmd FileType coffee vnoremap <buffer> <silent> <S-F5> :QuickRun 'coffee -cp --no-wrap'<CR>
 
-    autocmd FileType javascript setlocal ts=2 sts=2 sw=2 expandtab
 
     autocmd FileType ruby :compiler ruby
     autocmd BufReadPost *_spec.rb :compiler rspec
@@ -526,24 +520,13 @@ augroup my_config
 
     autocmd FileType vim noremap  <buffer> <silent> <F5> :<C-u>QuickRun<CR>
     autocmd FileType vim inoremap <buffer> <silent> <F5> <C-o>:<C-u>QuickRun<CR>
-    " autocmd FileType vim noremap  <buffer> <silent> <S-F5> :so %<CR>
     autocmd FileType vim noremap  <buffer> <silent> <Space>so :so %<CR>
-    " autocmd FileType vim inoremap <buffer> <silent> <S-F5> :so %<CR>
     autocmd FileType vim noremap  <buffer> <silent> <M-m> A\|" => 
     autocmd FileType vim inoremap  <buffer> <silent> <M-m> <Esc>A\|" => 
     autocmd FileType vim setlocal path=.,$VIMRUNTIME,,
     autocmd FileType vim setlocal iskeyword+=#
-    " autocmd FileType vim nnoremap <buffer> <M-x>r      :<C-u>call U_InsertRunResult()<CR>
-    " autocmd FileType vim inoremap <buffer> <M-x>r      :<C-o>call U_InsertRunResult()<CR>
 
     autocmd FileType nerdtree nnoremap <buffer> <silent> q <Nop>
-
-    " autocmd FileType mysql nnoremap <buffer> <silent> <F5> :MySQLSend<CR><Esc>
-    " autocmd FileType mysql vnoremap <buffer> <silent> <F5> :MySQLSend<CR><Esc>
-    " autocmd FileType mysql inoremap <buffer> <silent> <F5> <C-o>:MySQLSend<CR>
-
-    " autocmd FileType vimwiki nnoremap <buffer> <silent> <F5> :call UVimwiki2HTML()<CR>
-    " autocmd FileType vimwiki nnoremap <buffer> <silent> <S-F5> :call UVimwiki2ALLHTML()<CR>
 
     autocmd WinEnter,BufWinEnter * call HighlightCursor("")
     autocmd WinLeave             * call HighlightCursor("no")
@@ -568,8 +551,45 @@ augroup my_config
     autocmd FileType ruby vnoremap <buffer> <silent> <M-r> :call Xmpfilter()<CR>
     autocmd FileType ruby noremap  <buffer> <silent> <M-m> :call XmpCommentToggle()<CR>
     autocmd FileType ruby inoremap <buffer> <silent> <M-m> <C-o>:call XmpCommentToggle()<CR>
+    autocmd FileType ruby vnoremap <buffer> <M-x>r      :RubyBlockSwitch<CR>
+    autocmd FileType ruby nnoremap <buffer> <M-x>r      :RubyBlockSwitch<CR>
     "}}}
 
+    " autocmd ColorScheme * highlight markdownCodeBlock guifg=#717171 ctermfg=grey gui=none
+    autocmd ColorScheme * highlight link markdownCodeBlock Comment
+    " autocmd ColorScheme * highlight markdownCodeBlock guifg=#cca3b3 ctermfg=grey gui=none
+    autocmd FileType unite call s:unite_my_settings()
+
+    " CoffeeScript Like {{{
+    autocmd FileType coffee nnoremap  <buffer> <silent> <M-R> :QuickRun<CR>
+    autocmd FileType coffee inoremap  <buffer> <silent> <M-R> <C-o>:QuickRun<CR>
+    autocmd FileType coffee vnoremap  <buffer> <silent> <M-R> :QuickRun<CR>
+    autocmd FileType coffee nnoremap  <buffer> <silent> <M-r> :QuickRun 'coffee -cp --no-wrap'<CR>
+    autocmd FileType coffee inoremap  <buffer> <silent> <M-r> <C-o>:QuickRun 'coffee -cp --no-wrap'<CR>
+    autocmd FileType coffee vnoremap  <buffer> <silent> <M-r> :QuickRun 'coffee -cp --no-wrap'<CR>
+    "}}}
+
+    " haproxy.cng
+    autocmd BufNewFile,BufRead haproxy.cfg set filetype=haproxy
+    " Puppet
+    autocmd BufRead,BufNewFile *.pp setfiletype puppet
+    autocmd FileType scheme :let is_gauche=1
+    " Universal syntax for txt
+    autocmd BufNewFile,BufRead *.txt set filetype=txt
+
+    autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
+    " autocmd FileType python inoremap <buffer> <silent> <C-Space> <C-x><C-o>
+
+    " autocmd BufWritePost *.rb silent make -c %
+    autocmd FileType ruby noremap  <buffer> <silent> <M-r> moHmt:%call Xmpfilter()<CR>'tzt`o
+    autocmd FileType ruby inoremap <buffer> <silent> <M-r> <Esc>moHmt:%call Xmpfilter()<CR>'tzt`oa
+    autocmd FileType ruby vnoremap <buffer> <silent> <M-r> :call Xmpfilter()<CR>
+    autocmd FileType ruby noremap  <buffer> <silent> <M-m> :call XmpCommentToggle()<CR>
+    autocmd FileType ruby inoremap <buffer> <silent> <M-m> <C-o>:call XmpCommentToggle()<CR>
+    autocmd FileType ruby vnoremap <buffer> <M-x>r      :RubyBlockSwitch<CR>
+    autocmd FileType ruby nnoremap <buffer> <M-x>r      :RubyBlockSwitch<CR>
+
+    "}}}
     fun! HighlightCursor(flag)
         if (&filetype == 'nerdtree')
             return
@@ -603,48 +623,59 @@ vmap   <M-A>\|           <Plug>AM_T\|
 vmap   <M-A>t           <Plug>AM_T\|
 "}}}
 
+" Ack {{{
+let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+"}}}
+
 let NERDTreeWinSize=30
 
 " NERDCommenter
 let NERDSpaceDelims=1
 let NERDCreateDefaultMappings = 0
+let g:NERDCustomDelimiters = { 'puppet': { 'left': '#' } }
+
+" SnipMate
+let g:my_snippets_dir = "$HOME/.vim/snippets"
 
 " Unite.vim {{{
 let g:unite_enable_start_insert = 1
-
+let g:unite_split_rule="botright"
+let g:unite_enable_split_vertically = 0
 nnoremap [unite] <Nop>
 nmap     <M-u>   [unite]
+nmap     U       [unite]
 nmap     <Space>u   [unite]
 
 nnoremap [unite]u           :<C-u>Unite<Space>
 nnoremap [unite]<M-u>       :<C-u>Unite file_mru<CR>
-nnoremap <silent> [unite]f  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
+" nnoremap <silent> [unite]f  :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
+nnoremap <silent> [unite]f  :<C-u>UniteWithCurrentDir file_rec -buffer-name=files<CR>
 nnoremap <silent> [unite]d  :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
 nnoremap <silent> [unite]m  :<C-u>Unite file_mru<CR>
-" nnoremap <silent> [unite]b  :<C-u>Unite buffer<CR>
-nnoremap <silent> [unite]b  :<C-u>Unite -auto-preview buffer<CR>
-nnoremap <silent> <Space>m  :<C-u>Unite file_mru<CR>
-nnoremap <silent> <Space>b  :<C-u>Unite buffer<CR>
-" nnoremap <silent> <Space><Space>  :<C-u>Unite buffer<CR>
-nnoremap <silent> <C-n> :<C-u>Unite buffer<CR>
-" nnoremap <silent> <C-n>      :<C-u>Unite buffer<CR>
-" nnoremap <silent> [unite]g  : <C-u>Unite -input=.rvm/gems/ruby-1.8.7-p302/gems/ file<CR>
+nnoremap <silent> [unite]l  :<C-u>Unite lines<CR>
+nnoremap <silent> [unite]t  :<C-u>UniteWithCursorWord tag -vertical<CR>
+nnoremap <silent> <Space>g  :<C-u>UniteWithCursorWord tag -vertical<CR>
+
+nnoremap <silent> [unite]b  :<C-u>Unite bookmark<CR>
+nnoremap <silent> [unite]rm  :<C-u>UniteWithCursorWord -start-insert ref/man<CR>
+nnoremap <silent> [unite]rr  :<C-u>UniteWithCursorWord -start-insert ref/refe<CR>
+nnoremap <silent> [unite]rp  :<C-u>UniteWithCursorWord -start-insert ref/pydoc<CR>
+
+nnoremap <silent> [unite]p  :<C-u>Unite phrase -start-insert<CR>
+nnoremap <silent> [unite]o  :<C-u>Unite outline -start-insert<CR>
+
+nnoremap <silent> <Space>p  :<C-u>Unite phrase -start-insert<CR>
+nnoremap <silent> <Space>o  :<C-u>Unite outline -start-insert<CR>
+nnoremap <silent> <Space>b  :<C-u>Unite bookmark<CR>
+nnoremap <silent> <Space><Space> :<C-u>Unite -start-insert buffer<CR>
+nnoremap <silent> <C-p> :<C-u>Unite file_mru -buffer-name=files<CR>
 nnoremap <silent> [unite]g  : <C-u>Unite -input=.rvm/gems/ruby-1.8.7-p302/gems/ -buffer-name=files file<CR>
 
-autocmd FileType unite call s:unite_my_settings()
 
 function! s:unite_my_settings()"{{{
-    " Overwrite settings.
-
-    imap <buffer> jj      <Plug>(unite_insert_leave)
-    nnoremap <silent><buffer> <C-k> :<C-u>call unite#mappings#do_action('preview')<CR>
     nmap <silent><buffer> m <Plug>(unite_toggle_mark_current_candidate)
-    vmap <silent><buffer> m <Plug>(unite_toggle_mark_selected_candidates)|
-
+    vmap <silent><buffer> m <Plug>(unite_toggle_mark_selected_candidates)
     imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
-
-    " Start insert.
-    let g:unite_enable_start_insert = 1
 endfunction"}}}
 
 let g:unite_source_file_mru_limit = 200
@@ -702,8 +733,11 @@ let g:surround_mapping.ruby = {
 let g:surround_mapping.javascript = {
             \ 'f':  "function(){ \r }"
             \ }
+let g:surround_mapping.lua = {
+            \ 'f':  "function(){ \r }"
+            \ }
 let g:surround_mapping.python = {
-            \ 'p':  "print \r",
+            \ 'p':  "print( \r)",
             \ '[':  "[\r]",
             \ }
 let g:surround_mapping.vim= {
@@ -713,19 +747,32 @@ let g:surround_mapping.vim= {
 call SetupSurroundMapping('g')
 "}}}
 
+let g:netrw_http_cmd = "elinks-for-vim"
+
 " Phrase.vim
-let g:phrase_dir = "$HOME/.vim/phrase/t9md"
-let g:phrase_comment = {}
-let g:phrase_comment.vim = '"'
-let g:phrase_comment.lua = '--'
-let g:phrase_ft2ext = {}
-let g:phrase_ft2ext.perl = "pl"
+let g:phrase_author = "t9md"
+" let g:phrase_basedir = "$HOME/.vim/phrase"
+
+let g:phrase_ft_tbl = {}
+let g:phrase_ft_tbl.lua = {}
+let g:phrase_ft_tbl.lua.cmt = ['--']
+let g:phrase_ft_tbl.lua.ext = 'lua'
+let g:phrase_ft_tbl = {
+            \"scss": { "ext": "scss",  "cmt": ["/*", "*/"] }
+            \ }
+" let g:phrase_comment.vim = '"'
+" let g:phrase_comment.lua = '--'
+" let g:phrase_ft2ext = {}
+" let g:phrase_ft2ext.perl = "pl"
 
 " TryIt
 let g:tryit_dir = "$HOME/.vim/tryit"
 nnoremap <silent> T  :TryIt<CR>
 vnoremap <silent> T  :TryItSelection<CR>
 nnoremap <silent> <Space>t  :TryItInteractive<CR>
+
+" Tlist
+let Tlist_Use_Right_Window = 1
 
 " CommandT
 let g:CommandTMaxHeight = 30
@@ -744,9 +791,7 @@ command! -nargs=? Perldoc :call ref#ref("perldoc " . <q-args>)
 command! -nargs=? Erlang  :call ref#ref("erlang " . <q-args>)
 command! -nargs=? Man     :call ref#ref("man " . <q-args>)
 
-
-" nnoremap <Space>b :call BuffListWindow()<CR>
-nnoremap <silent> <Space><Space> :call BuffListWindow()<CR>
+" nnoremap <silent> <Space><Space> :call BuffListWindow()<CR>
 
 " macvim-kaoriya workaround {{{
 if g:Is_mac
@@ -761,7 +806,7 @@ endif
 " # Bundle: git://github.com/vim-scripts/bufexplorer.zip.git
 " Bundle: git://github.com/bronson/vim-closebuffer.git
 " Bundle: git://github.com/vim-scripts/IndexedSearch.git
-" Bundle: git://github.com/bronson/vim-trailing-whitespace.git
+" # Bundle: git://github.com/bronson/vim-trailing-whitespace.git
 " # Bundle: git://github.com/Raimondi/YAIFA.git
 " Bundle: git://github.com/tpope/vim-vividchalk.git
 "
@@ -773,7 +818,7 @@ endif
 " Bundle: git://github.com/scrooloose/nerdcommenter.git
 " Bundle: git://github.com/tpope/vim-surround.git
 
-" #Bundle: git://github.com/vim-scripts/taglist.vim
+" Bundle: git://github.com/vim-scripts/taglist.vim
 " #Bundle: git://github.com/msanders/snipmate.vim.git
 "
 " Bundle: git://github.com/vim-scripts/tlib.git
@@ -782,7 +827,7 @@ endif
 
 " # Bundle: git://github.com/scrooloose/snipmate-snippets.git
 " Bundle: git://github.com/vim-scripts/Align.git
-" Bundle: git://github.com/tpope/vim-endwise.git
+" #Bundle: git://github.com/tpope/vim-endwise.git
 " Bundle: git://github.com/tpope/vim-repeat.git
 " Bundle: git://github.com/tpope/vim-fugitive.git
 " # Bundle: git://github.com/ervandew/supertab.git
@@ -794,7 +839,7 @@ endif
 
 " Ruby/Rails Programming:
 " Bundle: git://github.com/vim-ruby/vim-ruby.git
-" # Bundle: git://github.com/tpope/vim-rails.git
+" Bundle: git://github.com/tpope/vim-rails.git
 " # Bundle: git://github.com/tpope/vim-rake.git
 " # Bundle: git://github.com/janx/vim-rubytest.git
 " # Bundle: git://github.com/tsaleh/vim-shoulda.git
@@ -805,7 +850,6 @@ endif
 " Other compilation by t9md
 " # BUNDLE: git://github.com/Raimondi/delimitMate.git
 " # BUNDLE: git://github.com/Townk/vim-autoclose
-" BUNDLE: git://github.com/fholgado/minibufexpl.vim.git
 " BUNDLE: git@github.com:t9md/vim-text-manup.git
 " BUNDLE: git@github.com:t9md/vim-foldtext.git
 " BUNDLE: git@github.com:t9md/vim-phrase.git
@@ -814,10 +858,20 @@ endif
 " BUNDLE: git://github.com/vim-scripts/Color-Sampler-Pack.git
 " BUNDLE: git://github.com/vim-scripts/Super-Shell-Indent.git
 " BUNDLE: git://github.com/Shougo/unite.vim.git
-" BUNDLE: git://github.com/vim-scripts/ManPageView.git
+" #BUNDLE: git://github.com/vim-scripts/ManPageView.git
 " BUNDLE: git://github.com/thinca/vim-quickrun.git
+" BUNDLE: git://github.com/thinca/vim-localrc.git
 " BUNDLE: git://github.com/thinca/vim-ref.git
 " BUNDLE: git://github.com/thinca/vim-openbuf.git
+" BUNDLE: git://github.com/tyru/restart.vim.git
+" BUNDLE: git://github.com/vim-scripts/newspaper.vim.git
+"
+" Unite plugin
+" BUNDLE: git://github.com/thinca/vim-poslist.git
+" BUNDLE: git://github.com/h1mesuke/unite-outline.git
+" BUNDLE: git://github.com/tsukkee/unite-help.git
+" BUNDLE: git://github.com/ujihisa/unite-colorscheme.git
+" BUNDLE: git://github.com/tsukkee/unite-tag.git
 "
 " textobj extention
 " BUNDLE: git://github.com/vim-scripts/textobj-user.git
@@ -830,4 +884,6 @@ endif
 " BUNDLE: git://github.com/thinca/vim-textobj-between.git
 " BUNDLE: git://github.com/thinca/vim-textobj-comment.git
 " BUNDLE: git@github.com:t9md/vim-textobj-function-ruby.git
+" BUNDLE: git://github.com/mileszs/ack.vim.git
+" BUNDLE: git://github.com/vim-scripts/ZoomWin.git
 "}}}

@@ -471,11 +471,11 @@ command! -nargs=0 SnippetsReload :call <SID>SnippetsReload()
 command! -complete=customlist,<SID>SnippetsDirList -nargs=?
             \ SnippetsEdit :call <SID>SnippetsEdit('<args>')
 
-function! s:SnippetsReload()
-    call ReloadAllSnippets()
-    redraw
-    Echo "Snippets reloaded"
-endfunction
+" function! s:SnippetsReload()
+    " call ReloadAllSnippets()
+    " redraw
+    " Echo "Snippets reloaded"
+" endfunction
 
 function! s:SnippetsDirList(A,L,P)
     return split(g:snippets_dir, ',')
