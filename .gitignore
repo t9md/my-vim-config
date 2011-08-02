@@ -1,2 +1,3 @@
 trash
 *.swp
+vim/autoload/pathogen.vim
