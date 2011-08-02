@@ -60,48 +60,6 @@ endfunction
 command! HighlightTrailingWhiteSpace call <SID>HighlightTrailingWhiteSpace()
 command! -range=% FixWhitespace call <SID>FixWhitespace(<line1>,<line2>)
 
-" QuickMatc: {{{
-"============================================================
-function! QuickMatch(flag, mode)
-    if !a:flag
-        silent! match none
-        return
-    endif
-
-    if a:mode == 'v'
-        normal `<
-        let s = col('.') - 1
-        normal `>
-        let e = col('.') - 1
-        let line = getline('.')
-        let pat = line[s : e]
-    else
-        let pat = expand('<cword>')
-    endif
-    let new_pat = escape(pat, '/')
-
-    if exists('b:quickmatch_pat') && b:quickmatch_pat == new_pat
-        silent! match none
-        unlet b:quickmatch_pat
-        return
-    endif
-    let b:quickmatch_pat = new_pat
-
-    " highlight link MATCH Visual
-    highlight MATCH gui=undercurl guisp=Cyan
-    let cmd = 'match MATCH /'. b:quickmatch_pat . '/'
-    try 
-        silent exe cmd
-    catch
-    finally
-        " let s:last_pos = cur_pos
-    endtry
-endfunction
-
-command! QuickMatchOn  :call QuickMatch(1, 'n')
-command! QuickMatchOff :call QuickMatch(0, 'n')
-"}}}
-"
 " vim-Ruby: {{{
 "============================================================
 " default 'gf' find directory befer try suffixesadd
@@ -259,5 +217,4 @@ function! s:FoldDisable()
     exe cmd
     call s:FoldStatus()
 endfunction
-
 " }}}

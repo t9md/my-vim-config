@@ -536,6 +536,11 @@ set t_Sf=[3%dm
 nnoremap <F12> :IndentGuidesToggle<CR>
 let g:indent_guides_guide_size=1
 
+" OpenBrowser: {{{2
+let g:netrw_nogx = 1 " disable netrw's gx mapping.
+nmap gx <Plug>(openbrowser-smart-search)
+xmap gx <Plug>(openbrowser-smart-search)
+
 " Tmux2Vim {{{2
 " let tasks = [
       " \ { "name": "snap_list", "desc": "vagrant snap list", "cmds": ['vagrant snap list']},
@@ -980,15 +985,14 @@ nnoremap <silent> <Space>t :TryItInteractive<CR>
 " CommandT: {{{2
 let g:CommandTMaxHeight = 30
 
-" QuickMatch: {{{2
-nnoremap <Space>j :<C-u>call QuickMatch(1, 'n')<CR>
-nnoremap <Space>J :<C-u>call QuickMatch(0, 'n')<CR>
-
 " Quickhl: {{{2
 nmap <Space>m <Plug>(quickhl#toggle)
 xmap <Space>m <Plug>(quickhl#toggle)
 nmap <Space>M <Plug>(quickhl#reset)
 xmap <Space>M <Plug>(quickhl#reset)
+
+nmap <Space>j <Plug>(quickhl#match)
+xmap <Space>j <Plug>(quickhl#match)
 
 " QuickRun: {{{2
 let g:quickrun_config    = {}
@@ -1233,6 +1237,7 @@ endfunction"}}}
 " Bundle: thinca/vim-scouter
 
 " Bundle: tyru/restart.vim
+" Bundle: tyru/open-browser.vim
 " Bundle: vim-scripts/newspaper.vim
 " # Bundle: ujihisa/shadow.vim
 " # Bundle: motemen/hatena-vim
