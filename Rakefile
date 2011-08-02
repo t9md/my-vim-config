@@ -14,10 +14,19 @@ $files = %w(
 VIMDIR_SRC     = File.expand_path("~/Dropbox/vim")
 VIMDIR_PREPARE = File.expand_path("./vim")
 
-desc "clean"
-task :clean do
+desc "dist_clean"
+task :dist_clean do
   sh "rm -rf vim"
   sh "rm -f *.tmp"
+end
+
+desc "clean"
+task :clean do
+  sh "rm -f *.tmp"
+end
+
+desc "build_all"
+task :build_all => [:dist_clean, :prepare, :build, :clean ] do
 end
 
 desc "prepare"
@@ -43,7 +52,8 @@ task :prepare do
 
   vimrc = %w( gvimrc_linux.vim vimrc_linux.vim  ).map { |f| File.join(VIMDIR_SRC, f) }
   vimrc.each do |f|
-    cp f, "#{f}.tmp" , :verbose => true
+    puts f
+    cp f, "#{File.basename(f)}.tmp" , :verbose => true
   end
 end
 
