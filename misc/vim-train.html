@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>便利機能 VIM7 標準</title>
+</head>
+<body>
+
+<p><style TYPE="text/css">
+<!-- 
+h1 { color: white;  background: #27408B; padding: 5px; }
+h2 { color: #27408B; border-bottom: double medium #27408B; }
+h3 { color: #27408B; margin: 2px; padding: 2px 10px; border-left: medium solid #27408B;}
+pre { border: solid 1px #2f3a51; background: linen; margin: 1em; padding: 10px;}
+-->
+</style></p>
+
+<h1 id="bfheader-05cb0a3e8b1ba21474e112909c2f81d6">便利機能 VIM7 標準</h1>
+
+<pre><code>H, M, L    =&gt; 画面をスクロールさせずにカーソルを移動。High, Middle, Low
+zt, zz, zb =&gt; 現在のカーソル位置を画面上のどこに持ってくるか？t(top),z(middle),b(bottom)
+gf         =&gt; カーソル下のファイルを開く
+C-w f      =&gt; Window を split してカーソル下のファイルを開く
+K          =&gt; カーソル下の word を Manで引く。
+netrw      =&gt; ファイルエクスプローラ。慣れれば Shellで移動するより格段に楽。
+</code></pre>
+
+<h3 id="bfheader-951413d46ce7649c7910ec8b9158433c">netrw</h3>
+
+<pre><code>u, U =&gt; 戻る, 進む
+v    =&gt; 新たな window を開く
+o    =&gt; open
+-    =&gt; Parent Directory へ
+</code></pre>
+
+<hr />
+
+<h2 id="bfheader-c787bbe011c231831a340a80d4e5509e">Mode ( モードにはどんなものがあるか? )</h2>
+
+<pre><code>Nomal            =&gt; default
+Insert           =&gt; i,I,a,A,o,O
+Visual           =&gt; v,C-v
+Command          =&gt; :
+Operator Pending =&gt; 操作対象(motion )待ちモード。例えば dj, dw, d$ の時のdの入力後にmotion 待ちの状態
+</code></pre>
+
+<h3 id="bfheader-960b44c579bc2f6818d2daaf9e4c16f0">Normal</h3>
+
+<pre><code>^   =&gt; first word
+0   =&gt; line head
+$   =&gt; End of line
+w,W   =&gt; move forward by word/WORD word-not-skip hiphen
+b,B   =&gt; same as w/W but backword direction
+e,E   =&gt; move to end of by word/WORD
+yy  =&gt; copy current line to register
+p   =&gt; paste current register-contents
+&gt;&gt;  =&gt; indent
+u   =&gt; undo
+C-r =&gt; redo
+/   =&gt; search
+.   =&gt; repead last command
+[I  =&gt; show line containing keyword under cursor
+]I  =&gt; same as [I but start searching from current line to EOF
+n%  =&gt; n%の行に移動。ex) 50%
+gg  =&gt; first line of file
+G   =&gt; last  line of file
+nG  =&gt; n line of file
+:n  =&gt; n line of file(command mode version)
+C-i =&gt; Forward
+C-o =&gt; BackFord
+C-a =&gt; insert previously inserted text
+</code></pre>
+
+<h3 id="bfheader-4557e77491fe3dbd9a6055aeb0ed00d7">Visual</h3>
+
+<pre><code>v   =&gt; 範囲選択(文字指向) visual mode start
+o   =&gt; move cursor opposit side of selection
+O   =&gt; move opposit side of selection in 矩形選択モード
+V   =&gt; 範囲選択(行指向)
+C-v =&gt; 矩形選択。一括 insert/delete/change
+&gt;   =&gt; indent
+U   =&gt; upcase
+u   =&gt; downcase
+iw  =&gt; select inner word
+aw  =&gt; select around(?) word
+i{  =&gt; select inner of {
+a{  =&gt; select inner of {
+i(  =&gt; select inner of (
+a(  =&gt; select inner of (
+</code></pre>
+
+<h3 id="bfheader-a458be0f08b7e4ff3c0f633c100176c0">Insert</h3>
+
+<pre><code>C-p,C-n =&gt; 単語補完
+C-x C-f =&gt; ファイル名補完
+</code></pre>
+
+<h3 id="bfheader-ee97be03cb04119af45014d815621ce1">Command</h3>
+
+<pre><code>r! cat /etc/hosts  =&gt; 'cat /etc/hosts'の実行(!)結果(=標準出力)をカーソル下に読み込む(r)
+&lt;,&gt;!sort           =&gt; 選択範囲をsortコマンドで処理した結果に置き換え
+w                  =&gt; 保存
+w filename         =&gt; filename として保存
+%s!abc!ABC!gc      =&gt; ファイル全体('%')を対象にして、abc &gt; ABCへ変換。一行に何度でも(g),、置き換え前に確認(c)。
+set nowrap         =&gt; 行の折り返しを無効化
+set ft=ruby        =&gt; filetype をrubyに設定
+set [no]ignorecase =&gt; 検索時に大文字小文字を区別しない。
+set nowrap         =&gt; 行の折り返しを無効化
+set [no]hlsearch   =&gt; 検索語をハイライトする。
+C-f                =&gt; 実行予定のコマンドを通常の vim バッファで編集して&lt;CR&gt;で実行
+shell              =&gt; shell を実行。Exit すると vim に戻る。
+</code></pre>
+
+<h3 id="bfheader-3ab2f4970f76210d37fba8084d48e699">Multiple Window</h3>
+
+<pre><code>:split               =&gt; 水平(horizontal) split
+:split file          =&gt; 水平(horizontal) splitでfileを開く
+:vsplit              =&gt; 垂直(vertical) split
+:vsplit file         =&gt; 垂直(vertical) split でfileを開く
+:windo %s!abc!ABC!gc =&gt; 置き換えを、全Windowで行う。
+C-w s                =&gt; horizontal split
+C-w v                =&gt; vertical split
+C-w h,j,k,l          =&gt; move cursor to &lt;char&gt; direction window
+C-w H,J,K,L          =&gt; 指定した方向でWindowを最大化
+C-w r,R              =&gt; Rotate window
+C-w x                =&gt; eXchange window
+C-w t,b              =&gt; select Top/Bottom window
+</code></pre>
+
+<h3 id="bfheader-fc171d0737f8e420337cd46492a7df4b">folding ( 折り畳み )</h3>
+
+<pre><code>set foldenable
+set foldmethod=indent
+
+zf     =&gt; create fold (you need :set fdm=manual to this work)
+zc, zo =&gt; close/open folding
+zC, zO =&gt; close/open ALL folding under selection
+zj, zk =&gt; fold 単位で j, k の方向へ移動
+set fdc=3 =&gt; use left 3 column as forld level indicator
+</code></pre>
+
+<h3 id="bfheader-7ca37a50a6c27035977978dab4290b09">text object</h3>
+
+<pre><code>[ 操作 &gt; 範囲 &gt; 対象 ] の組み合わせ。
+   d      i      w
+
+diw =&gt; Delete Inner Word(word)
+diW =&gt; Delete Inner WORD(WORD&gt;
+ciw =&gt; Change ...
+ciW =&gt; Change ...
+yiw =&gt; Yank ..
+di( =&gt; Delete Inner of '('
+dib =&gt; 上と同じ。
+ci[ =&gt; Change Inner of '['
+daw =&gt; Delete A Word(word)
+caw =&gt; Change A word(word)
+ci" =&gt; Change Inner '"'
+cit =&gt; Change Inner Tag(HTML tag)
+</code></pre>
+
+<h3 id="bfheader-c4ce014ca17a7dc285a366a660944ac0">矩形選択</h3>
+
+<pre><code>C-v で矩形選択モードに入る。
+矩形選択モードで,Iで挿入すると、複数行に文字を挿入できる。C(change)も同じ。
+$ で行末に移動したあと、a で文字を挿入すると、複数行の行末に文字を挿入出来る。
+</code></pre>
+
+</body>
+</html>
