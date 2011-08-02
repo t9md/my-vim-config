@@ -87,7 +87,8 @@ task :install do
     exit 1
   end
 
-  cp "vimrc_#{os}.vim", "~/.vimrc", :verbose => true
-  cp "gvimrc_#{os}.vim", "~/.gvimrc", :verbose => true
-  cp "vimrc.local.vim", "~/.vimrc.local.vim", :verbose => true
+  sh "cp vimrc_#{os}.vim ~/.vimrc"
+  sh "cp gvimrc_#{os}.vim ~/.gvimrc"
+  sh "cp vimrc.local.vim ~/.vimrc.local.vim"
+  sh "cp -r vim ~/.vim"
 end
