@@ -1,6 +1,5 @@
 Setup
 ====================
-
 ### backup your current vim config
 
     $ cd ~/
@@ -12,6 +11,7 @@ Setup
     $ git clone git://github.com/t9md/my-vim-config.git 
     $ cd my-vim-config
 
+
 ### install
 
     $ rake install os=linux
@@ -20,10 +20,10 @@ Setup
 
 ### install bundles(vim-plugin)
 
-    $ wget http://github.com/bronson/vim-update-bundles/raw/master/vim-update-bundles
-    $ ruby vim-update-bundles
+    $ gem install vim-update-bundles
+    $ vim-update-bundles
 
-Setting
+Setting( following docment is old)
 ====================
 
 change following setting in .vimrc
