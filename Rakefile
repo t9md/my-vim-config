@@ -61,8 +61,7 @@ desc "build"
 task :build do
   ['gvimrc_linux.vim.tmp', 'vimrc_linux.vim.tmp' ].each do |file|
     s = File.read(file)
-    s = s.gsub('git@github.com:t9md/','t9md/')
-
+    s = s.gsub('git@github.com:t9md','t9md').gsub(/\.git$/,'')
     linux_file = File.basename(file, ".tmp")
     mac_file = linux_file.sub('_linux','_mac')
 

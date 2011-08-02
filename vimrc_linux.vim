@@ -17,7 +17,7 @@ call pathogen#infect()
 "-----------------------------------------------------------------
 let g:enable_swap_colon = 1 " US key board
 let g:loaded_gist_vim   = 1 " gist is danger
-let g:loaded_nerdtree_plugin_easymove = 1
+let g:loaded_nerdtree_plugin_easymove = 0
 let g:phrase_author     = expand("$USER")
 
 " Basic setting {{{1
@@ -217,7 +217,6 @@ else
   xnoremap <M-v> p
 endif
 
-
 nnoremap <Space>vs :<C-u>exe 'VimShellPop ' . expand("%:h")<CR>
 nnoremap <Space>vf :<C-u>VimFilerSimple<CR>
 
@@ -280,10 +279,6 @@ nnoremap <silent> H :NERDTreeFind<CR>
 
 nmap <silent> zl <Plug>(FoldcolumnIncrease)
 nmap <silent> zh <Plug>(FoldcolumnDecrease)
-
-" scroll a bit faster
-" nnoremap <C-e> 3<C-e>
-" nnoremap <C-y> 3<C-y>
 
 " Function and Command {{{1
 function! SetTransparency(ope) "{{{
@@ -417,7 +412,7 @@ augroup my_config "{{{
   au BufNewFile,BufRead /tmp/*vimperator*   setlocal filetype=textile bufhidden=delete
 
   " Chef
-  au BufNewFile,BufRead */cookbooks/*  call s:ft_chef_hook()
+  au BufNewFile,BufRead */*cookbooks/*  call s:ft_chef_hook()
 
   " Thunderbird
   au BufNewFile,BufRead /tmp/*.eml          setlocal filetype=markdown bufhidden=delete
@@ -731,20 +726,9 @@ call unite#custom_filters('file_rec',
             \ ['converter_relative_word', 'matcher_default',
             \  'sorter_default', 'converter_relative_abbr'] )
 
-let g:unite_source_ack_targetdir_shortcut = {
-      \ 'bundle'    : '$HOME/.vim/bundle',
-      \ 'neco'      : "$HOME/.vim/bundle/neocomplcache",
-      \ 'unite'     : "$HOME/.vim/bundle/unite.vim",
-      \ 'unt/a'     : "$HOME/.vim/bundle/unite.vim/autoload/",
-      \ 'unt/a/unt' : "$HOME/.vim/bundle/unite.vim/autoload/unite/",
-      \ 'unt/a/src' : "$HOME/.vim/bundle/unite.vim/autoload/unite/sources/",
-      \ 'unt/a/flt' : "$HOME/.vim/bundle/unite.vim/autoload/unite/filters/",
-      \ 'unt/a/kid' : "$HOME/.vim/bundle/unite.vim/autoload/unite/kinds/",
-      \ 'vagrant'   : '/var/lib/gems/1.8/gems/vagrant-0.8.2',
-      \ 'gem'       : '/var/lib/gems/1.8/gems',
-      \ 'chef'      : '/var/lib/gems/1.8/gems/chef-0.10.2',
-      \ 'nova'      : "$HOME/local/github/openstack/nova-2011.1/nova",
-      \ }
+if !exists("g:unite_source_ack_targetdir_shortcut")
+    let g:unite_source_ack_targetdir_shortcut = {}
+endif
 
 function! s:set_SearchCmd(dict)
     for [key, val] in items(a:dict)
@@ -1127,7 +1111,7 @@ function! ChefNerdTreeFind(env)"{{{
   endtry
 endfunction"}}}
 let g:chef = {}
-" let g:chef.hooks = ['ChefNerdTreeFind']
+let g:chef.hooks = ['ChefNerdTreeFind']
 let g:chef.any_finders = ['Attribute', 'Source', 'Recipe', 'Definition']
 function! s:ft_chef_hook()"{{{
   " Mouse:
@@ -1203,23 +1187,23 @@ endfunction"}}}
 " # Bundle: godlygeek/tabular
 
 " Other compilation by t9md
-" Bundle: t9md/vim-quickhl.git
-" Bundle: t9md/vim-chef.git 
-" Bundle: t9md/vim-textmanip.git
-" Bundle: t9md/vim-foldtext.git
-" Bundle: t9md/vim-phrase.git
-" Bundle: t9md/vim-tryit.git
-" Bundle: t9md/vim-resizewin.git
-" Bundle: t9md/vim-underlinetag.git
-" Bundle: t9md/vim-ruby_eval.git
-" Bundle: t9md/vim2tmux.vim.git
-" Bundle: t9md/vim-quicktag.git
-" Bundle: t9md/vim-unite-ack.git
-" Bundle: t9md/vim-surround_custom_mapping.git
-" Bundle: t9md/vim-nerdtree_plugin_collections.git
-" Bundle: t9md/vim-misc-experiment.git
-" Bundle: t9md/vim-fthook.git
-" Bundle: t9md/vim-textobj-function-ruby.git
+" Bundle: t9md/vim-quickhl
+" Bundle: t9md/vim-chef
+" Bundle: t9md/vim-textmanip
+" Bundle: t9md/vim-foldtext
+" Bundle: t9md/vim-phrase
+" Bundle: t9md/vim-tryit
+" Bundle: t9md/vim-resizewin
+" Bundle: t9md/vim-underlinetag
+" Bundle: t9md/vim-ruby_eval
+" Bundle: t9md/vim2tmux.vim
+" Bundle: t9md/vim-quicktag
+" Bundle: t9md/vim-unite-ack
+" Bundle: t9md/vim-surround_custom_mapping
+" Bundle: t9md/vim-nerdtree_plugin_collections
+" Bundle: t9md/vim-misc-experiment
+" Bundle: t9md/vim-fthook
+" Bundle: t9md/vim-textobj-function-ruby
 "
 " Bundle: nathanaelkane/vim-indent-guides
 " Bundle: vim-scripts/Color-Sampler-Pack
