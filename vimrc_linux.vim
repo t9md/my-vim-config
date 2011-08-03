@@ -785,8 +785,8 @@ nnoremap <silent> <M-f>          :<C-u>Unite my_menu<CR>
 
 nnoremap <silent> <Space>g :<C-u>UniteWithCursorWord tag<CR>
 nnoremap <silent> <Space>r :<C-u>Unite rake<CR>
-nnoremap <silent> <Space>F :<C-u>exe  "Unite file_rec:" . expand('%:p:h') . " -buffer-name=files"<CR>
-nnoremap <silent> <Space>f :<C-u>Unite file_rec -buffer-name=files<CR>
+nnoremap <silent> <Space>f :<C-u>exe  "Unite file_rec:" . expand('%:p:h') . " -buffer-name=files"<CR>
+nnoremap <silent> <Space>F :<C-u>Unite file_rec -buffer-name=files<CR>
 
 function! s:escape_visual(...) "{{{
   let escape = a:0 ? a:1 : ''
