@@ -1,5 +1,5 @@
 "=================================================
-" vim: set sw=4 sts=4 et fdm=marker fdc=3 fdl=5:
+" vim: set sw=2 sts=2 et fdm=marker fdc=3 fdl=5:
 " Init {{{1
 let g:Is_unix  = has('unix')
 let g:Is_mac   = has('gui_macvim')
@@ -17,8 +17,9 @@ call pathogen#infect()
 "-----------------------------------------------------------------
 let g:enable_swap_colon = 1 " US key board
 let g:loaded_gist_vim   = 1 " gist is danger
-let g:loaded_nerdtree_plugin_easymove = 0
 let g:phrase_author     = expand("$USER")
+let g:loaded_nerdtree_plugin_easymove = 0
+let g:loaded_nerdtree_plugin_local_mapping = 1
 
 " Basic setting {{{1
 "-----------------------------------------------------------------
@@ -28,7 +29,7 @@ syntax on
 set nocompatible
 set guicursor=a:blinkon0,n:hor7
 set notagbsearch
-set clipboard=unnamed
+" set clipboard=unnamed
 set previewheight=20
 set noswapfile
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
@@ -86,10 +87,10 @@ endif
 "-----------------------------------------------------------------
 let mapleader = ","
 
-vnoremap <silent> <D-p>  :<C-u>RubyEvalPrint<CR>
-vnoremap <silent> <D-i>  :<C-u>RubyEvalInsert<CR>
-vnoremap <silent> <C-x>p :<C-u>RubyEvalPrint<CR>
-vnoremap <silent> <C-x>e :<C-u>RubyEvalInsert<CR>
+xnoremap <silent> <D-p>  :<C-u>RubyEvalPrint<CR>
+xnoremap <silent> <D-i>  :<C-u>RubyEvalInsert<CR>
+xnoremap <silent> <C-x>p :<C-u>RubyEvalPrint<CR>
+xnoremap <silent> <C-x>e :<C-u>RubyEvalInsert<CR>
 
 nnoremap <silent> <D-W> :<C-u>WrapToggle<CR>
 nnoremap <C-S-D-=> :<C-u>call SetTransparency("+")<CR>
@@ -120,8 +121,10 @@ nnoremap <silent> <S-Up>    :10wincmd ><CR>
 nnoremap <silent> <S-Down>  :10wincmd <<CR>
 
 if g:enable_swap_colon
-  noremap ;     :
-  noremap :     ;
+  nnoremap ;     :
+  nnoremap :     ;
+  xnoremap ;     :
+  xnoremap :     ;
 endif
 
 nnoremap <silent> <S-D-Left>  :wincmd H<CR>
@@ -134,22 +137,22 @@ nnoremap <silent> <D-H> :wincmd H<CR>
 nnoremap <silent> <D-L> :wincmd L<CR>
 nnoremap <silent> <D-K> :wincmd K<CR>
 nnoremap <silent> <D-J> :wincmd J<CR>
-vnoremap <silent> <D-H> :wincmd H<CR>
-vnoremap <silent> <D-L> :wincmd L<CR>
-vnoremap <silent> <D-K> :wincmd K<CR>
-vnoremap <silent> <D-J> :wincmd J<CR>
+xnoremap <silent> <D-H> :wincmd H<CR>
+xnoremap <silent> <D-L> :wincmd L<CR>
+xnoremap <silent> <D-K> :wincmd K<CR>
+xnoremap <silent> <D-J> :wincmd J<CR>
 
-vmap <D-d>    <Plug>(Textmanip.duplicate_selection_v)
-vmap <C-d>    <Plug>(Textmanip.duplicate_selection_v)
+xmap <D-d>    <Plug>(Textmanip.duplicate_selection_v)
+xmap <C-d>    <Plug>(Textmanip.duplicate_selection_v)
 nmap <D-d>    <Plug>(Textmanip.duplicate_selection_n)
 nmap <Space>d <Plug>(Textmanip.duplicate_selection_n)
-vmap <Space>d <Plug>(Textmanip.duplicate_selection_v)
-vmap D        <Plug>(Textmanip.duplicate_selection_v)
+xmap <Space>d <Plug>(Textmanip.duplicate_selection_v)
+xmap D        <Plug>(Textmanip.duplicate_selection_v)
 
-vmap <C-j> <Plug>(Textmanip.move_selection_down)
-vmap <C-k> <Plug>(Textmanip.move_selection_up)
-vmap <C-h> <Plug>(Textmanip.move_selection_left)
-vmap <C-l> <Plug>(Textmanip.move_selection_right)
+xmap <C-j> <Plug>(Textmanip.move_selection_down)
+xmap <C-k> <Plug>(Textmanip.move_selection_up)
+xmap <C-h> <Plug>(Textmanip.move_selection_left)
+xmap <C-l> <Plug>(Textmanip.move_selection_right)
 
 nnoremap <silent> <D-2> :split<CR>
 nnoremap <silent> <D-3> :vsplit<CR>
@@ -188,7 +191,7 @@ nnoremap <D-T>   <C-w>T
 nnoremap <D-z> za
 nnoremap <D-k> zk
 nnoremap <D-j> zj
-vnoremap <D-z> zf
+xnoremap <D-z> zf
 
 " nnoremap <silent> <D-p> :<C-u>call PreviewWord()<CR>
 " nnoremap <silent> <D-p> :<C-u>call PreviewWord()<CR>
@@ -243,11 +246,11 @@ onoremap gc :<C-u>normal gc<CR>
 " nnoremap <silent> <F2> :TagbarToggle<CR>
 nnoremap <silent> <F2>      :NERDTreeFind<CR>
 nmap     <silent> <F3>      <plug>NERDCommenterToggle
-vmap     <silent> <F3>      <plug>NERDCommenterToggle
+xmap     <silent> <F3>      <plug>NERDCommenterToggle
 nmap     <silent> <D-;>     <plug>NERDCommenterToggle
-vmap     <silent> <D-;>     <plug>NERDCommenterToggle
+xmap     <silent> <D-;>     <plug>NERDCommenterToggle
 nmap     <silent> <Space>;  <plug>NERDCommenterToggle
-vmap     <silent> <Space>;  <plug>NERDCommenterToggle
+xmap     <silent> <Space>;  <plug>NERDCommenterToggle
 
 " QuickRun
 nnoremap <silent> <F5>       :<C-u>QuickRun<CR>
@@ -397,6 +400,7 @@ augroup my_config "{{{
   autocmd FileType python        setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
   autocmd FileType ruby          setlocal omnifunc=rubycomplete#Complete
+  autocmd FileType ref-*         nnoremap <buffer> q :wincmd q<CR>
 
   autocmd BufNewFile,BufReadPost *.node.js let b:quickrun_config = {}  | let b:quickrun_config = { 'command': 'node' }
 
@@ -419,7 +423,7 @@ augroup my_config "{{{
 
   autocmd BufNewFile,BufRead *.{md,mkd,mkdn,mark*} set filetype=markdown
   autocmd FileType text setlocal textwidth=78
-  autocmd FileType sh vnoremap <buffer> <silent> <F5> :<C-u>QuickRunWrapper "v"<CR>
+  autocmd FileType sh xnoremap <buffer> <silent> <F5> :<C-u>QuickRunWrapper "v"<CR>
   autocmd FileType sh nnoremap <buffer> <silent> <F5> :<C-u>QuickRunWrapper "n"<CR>
   autocmd FileType qf nnoremap <buffer> p <CR>:call <SID>preview()<CR>
 
@@ -458,7 +462,7 @@ augroup my_config "{{{
   " CoffeeScript: {{{
   autocmd FileType coffee nnoremap  <buffer> <silent> <D-r> :call QuickRunScrollEnd()<CR>
   autocmd FileType coffee inoremap  <buffer> <silent> <D-r> <C-o>:call QuickRunScrollEnd()<CR>
-  autocmd FileType coffee vnoremap  <buffer> <silent> <D-r> :call QuickRunScrollEnd()<CR>
+  autocmd FileType coffee xnoremap  <buffer> <silent> <D-r> :call QuickRunScrollEnd()<CR>
 
   fun! CoffeeCompile()
     QuickRun -cmdopt '-pb'
@@ -474,10 +478,10 @@ augroup my_config "{{{
   endf
   autocmd FileType coffee nnoremap  <buffer> <silent> <D-p> :call CoffeeCompile()<CR>
   autocmd FileType coffee inoremap  <buffer> <silent> <D-p> <C-o>:call CoffeeCompile()<CR>
-  autocmd FileType coffee vnoremap  <buffer> <silent> <D-p> :call CoffeeCompile()<CR>
+  autocmd FileType coffee xnoremap  <buffer> <silent> <D-p> :call CoffeeCompile()<CR>
   autocmd FileType coffee nnoremap <buffer> <silent> <S-F5> :QuickRun -cmdopt '-pb'<CR>
   autocmd FileType coffee inoremap <buffer> <silent> <S-F5> <C-o>:QuickRun -cmdopt '-pb'<CR>
-  autocmd FileType coffee vnoremap <buffer> <silent> <S-F5> :QuickRun -cmdopt '-pb'<CR>
+  autocmd FileType coffee xnoremap <buffer> <silent> <S-F5> :QuickRun -cmdopt '-pb'<CR>
   "}}}
 
   autocmd ColorScheme * highlight link markdownCodeBlock Comment
@@ -506,13 +510,13 @@ augroup END"}}}
 "
 " Color and ColorScheme {{{1
 "-------------------------------------------------
-" colorscheme molokai
-" colorscheme pyte
-" colorscheme newspaper
-" colorscheme lucius
 if g:GUI_MODE
+  " colorscheme molokai
+  " colorscheme pyte
+  " colorscheme newspaper
   colorscheme tomorrow_night
   " colorscheme github256
+  " colorscheme molokai
   " colorscheme lucius
 else
   colorscheme lucius
@@ -538,8 +542,24 @@ let g:indent_guides_guide_size=1
 
 " OpenBrowser: {{{2
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
+
 nmap gx <Plug>(openbrowser-smart-search)
 xmap gx <Plug>(openbrowser-smart-search)
+
+nmap go <Plug>(openbrowser-open)
+xmap go <Plug>(openbrowser-open)
+
+nmap gs <Plug>(openbrowser-search)
+xmap gs <Plug>(openbrowser-search)
+
+" nnoremap <silent> gt :TryIt<CR>
+" xnoremap <silent> gt :TryItSelection<CR>
+
+nnoremap <silent> gp  :PhraseEdit<CR>
+xnoremap <silent> gp  :PhraseCreate<CR>
+
+nnoremap <silent> gh :NERDTreeFind<CR>
+nnoremap ge :<C-u>Eijiro <C-r><C-w><CR>
 
 " Tmux2Vim {{{2
 " let tasks = [
@@ -589,7 +609,7 @@ function! g:fthook.ruby()"{{{
 
   noremap  <buffer> <silent> <D-r> moHmt:%call Xmpfilter()<CR>'tzt`o
   inoremap <buffer> <silent> <D-r> <Esc>moHmt:%call Xmpfilter()<CR>'tzt`oa
-  vnoremap <buffer> <silent> <D-r> :call Xmpfilter()<CR>
+  xnoremap <buffer> <silent> <D-r> :call Xmpfilter()<CR>
   noremap  <buffer> <silent> <D-m> :call XmpCommentToggle()<CR>
   inoremap <buffer> <silent> <D-m> <C-o>:call XmpCommentToggle()<CR>
   map <buffer> <D-j>   <Plug>BlockToggle
@@ -599,17 +619,18 @@ function! g:fthook.nerdtree()"{{{
   nmap <buffer> v go
   nnoremap <silent> <buffer>  f    :call <SID>normal_other("80j")<CR>
   nnoremap <silent> <buffer>  b    :call <SID>normal_other("80k")<CR>
-  nnoremap <silent> <buffer>  ~     :<C-u>NERDTreeFromBookmark home<CR>
-  nnoremap <silent> <buffer>  'g    :<C-u>NERDTreeFromBookmark gems<CR>
-  nnoremap <silent> <buffer>  'b    :<C-u>NERDTreeFromBookmark vimbundle<CR>
-  nnoremap <silent> <buffer>  'v    :<C-u>NERDTreeFromBookmark vim<CR>
+  nnoremap <silent> <buffer>  gh   :<C-u> NERDTreeClose<CR>
+  nnoremap <silent> <buffer>  ~          :<C-u>NERDTree $HOME<CR>
+  nnoremap <silent> <buffer>  <Leader>g  :<C-u>NERDTree /var/lib/gems/1.8/gems<CR>
+  nnoremap <silent> <buffer>  <Leader>b  :<C-u>NERDTree ~/.vim/bundle<CR>
+  nnoremap <silent> <buffer>  <Leader>v  :<C-u>NERDTree ~/.vim<CR>
 endfunction"}}}
 function! g:fthook.lingr_messages()"{{{
   nmap <buffer> i <Plug>(lingr-messages-show-say-buffer) 
 endfunction"}}}
 function! g:fthook.unite() "{{{
   nmap <buffer>m       <Plug>(unite_toggle_mark_current_candidate)
-  vmap <buffer>m       <Plug>(unite_toggle_mark_selected_candidates)
+  xmap <buffer>m       <Plug>(unite_toggle_mark_selected_candidates)
   imap <buffer> <C-g>  <Plug>(unite_exit)
   nmap <buffer> <C-g>  <Plug>(unite_exit)
   " imap <buffer> <C-e>  <Plug>(unite_narrowing_path)
@@ -679,10 +700,10 @@ xnoremap   <D-a>h    :Align "=>"<CR>
 
 " Ack: {{{2
 " let g:ackprg="ack-grep -H --nocolor --nogroup --column"
-" underlinetag:  {{{2
+" Underlinetag:  {{{2
 nnoremap <silent> <Space>] :<C-u>UnderlineTagToggle<CR>
 
-" NERDTree {{{2
+" NERDTree: {{{2
 let NERDTreeWinSize             = 31 "default
 let NERDTreeShowBookmarks       = 0
 let NERDTreeMinimalUI           = 1
@@ -727,6 +748,9 @@ let g:unite_source_line_search_word_highlight = "UniteSearchWord"
 let g:unite_source_ack_search_word_highlight  = "UniteSearchWord"
 let g:unite_source_ack_enable_print_cmd       = 1
 
+call unite#custom_max_candidates('file_rec', 1500)
+" call unite#custom_max_candidates('ack', 100)
+
 call unite#custom_filters('file_rec',
             \ ['converter_relative_word', 'matcher_default',
             \  'sorter_default', 'converter_relative_abbr'] )
@@ -770,7 +794,7 @@ endfunction
 call  unite#define_source(s:unite_source)
 unlet s:unite_source
 
-nnoremap <C-z> :call :<C-u>UniteResume<CR>
+nnoremap <silent> <C-z>          :<C-u>UniteResume<CR>
 nnoremap <silent> [unite]u       :<C-u>Unite<Space>
 nnoremap <silent> [unite]<D-u>   :<C-u>Unite file_mru<CR>
 nnoremap <silent> [unite]f       :<C-u>Unite -buffer-name=file file<CR>
@@ -783,10 +807,10 @@ nnoremap <silent> [unite]a       :<C-u>UniteWithCursorWord -buffer-name=ack ack<
 nnoremap <silent> <Space><Space> :<C-u>Unite buffer<CR>
 nnoremap <silent> <D-f>          :<C-u>Unite my_menu<CR>
 
-nnoremap <silent> <Space>g :<C-u>UniteWithCursorWord tag<CR>
-nnoremap <silent> <Space>r :<C-u>Unite rake<CR>
-nnoremap <silent> <Space>f :<C-u>exe  "Unite file_rec:" . expand('%:p:h') . " -buffer-name=files"<CR>
-nnoremap <silent> <Space>F :<C-u>Unite file_rec -buffer-name=files<CR>
+nnoremap <silent> <Space>g       :<C-u>UniteWithCursorWord tag<CR>
+nnoremap <silent> <Space>r       :<C-u>Unite rake<CR>
+nnoremap <silent> <Space>F       :<C-u>exe  "Unite file_rec:" . expand('%:p:h') . " -buffer-name=files"<CR>
+nnoremap <silent> <Space>f       :<C-u>Unite file_rec -buffer-name=files<CR>
 
 function! s:escape_visual(...) "{{{
   let escape = a:0 ? a:1 : ''
@@ -818,13 +842,14 @@ command! ScriptNames :Unite output:scriptnames
 " unite line
 " emacs-occur-like
 nnoremap <Space>l       :<C-u>UniteWithCursorWord line<CR>
-vnoremap <Space>l  <Esc>:<C-u>exe "Unite -input=" . <SID>escape_visual(' '). " line"<CR>
+xnoremap <Space>l  <Esc>:<C-u>exe "Unite -input=" . <SID>escape_visual(' '). " line"<CR>
 
 " Emacs's incremental-search forward and backward to occur with <C-o>
 " =====================================================
 cnoremap <expr> <C-o>  getcmdtype() =~# '[/?]'
       \ ? '<Esc>:<C-u>nohlsearch\|exe "Unite -input=" . escape(@/," ") . " line"<CR>'
       \ : "\<C-o>"
+
 " cnoremap <expr> <C-o>  getcmdtype() == '/'
 " \ ? '<Esc>:<C-u>nohlsearch\|exe "Unite -input=" . escape(@/," ") . " line:forward"<CR>'
 " \ : getcmdtype() == '?'
@@ -850,10 +875,10 @@ nnoremap <silent> [unite]o  :<C-u>Unite outline -start-insert<CR>
 
 nnoremap <silent> <Space>p  :<C-u>Unite phrase -start-insert<CR>
 nnoremap <silent> <Space>o  :<C-u>Unite outline -start-insert<CR>
+
 " nnoremap <silent> <Space>b  :<C-u>Unite bookmark<CR>
 nnoremap <silent> <Space>b :<C-u>Unite -start-insert buffer<CR>
 nnoremap <silent> <C-p> :<C-u>Unite file_mru -buffer-name=files<CR>
-nnoremap <silent> [unite]g  : <C-u>Unite -input=.rvm/gems/ruby-1.8.7-p302/gems/ -buffer-name=files file<CR>
 
 function! s:normal_other(cmd)
   silent wincmd p
@@ -920,8 +945,8 @@ nmap S     ysiW
 nmap ss    yss
 nmap <D-s> ysiw
 nmap <D-S> ysiW
-vmap <D-s> <Plug>VSurround
-" vmap s     <Plug>VSurround
+xmap <D-s> <Plug>VSurround
+" xmap s     <Plug>VSurround
 let g:surround_custom_mapping = {}"{{{
 let g:surround_custom_mapping._ = {
       \ 'p':  "<pre>\r</pre>",
@@ -1053,7 +1078,7 @@ smap     <C-k>       <Plug>(neocomplcache_snippets_force_expand)
 imap     <C-j>       <Plug>(neocomplcache_start_unite_complete)
 imap     <C-l>       <Plug>(neocomplcache_start_unite_snippet)
 
-inoremap <expr><CR>  pumvisible() ?
+inoremap <expr><CR> pumvisible() ?
       \ neocomplcache#smart_close_popup() :
       \ "\<CR>"
 inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"

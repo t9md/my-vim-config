@@ -1,3 +1,4 @@
+require 'rake/clean'
 VIMDIR = File.expand_path('~/.vim')
 
 task :default => "help"
@@ -8,30 +9,18 @@ task :help do
   puts
 end
 
-$files = %w(
-)
-
 VIMDIR_SRC     = File.expand_path("~/Dropbox/vim")
 VIMDIR_PREPARE = File.expand_path("./vim")
 
-desc "dist_clean"
-task :dist_clean do
-  sh "rm -rf vim"
-  sh "rm -f *.tmp"
-end
-
-desc "clean"
-task :clean do
-  sh "rm -f *.tmp"
-end
+CLEAN << FileList['*.tmp','*.vim', 'vim'].exclude("vimrc.local.vim")
 
 desc "build_all"
-task :build_all => [:dist_clean, :prepare, :build, :clean ] do
+task :build_all => [:clean, :prepare, :build] do
 end
 
 desc "prepare"
 task :prepare do
-  sh "mkdir #{VIMDIR_PREPARE}"
+  mkdir VIMDIR_PREPARE
   Dir.chdir VIMDIR_PREPARE do
     src_dirs = %w( syntax autoload colors after ftdetect).map {|f|
       File.join(VIMDIR_SRC, f)
@@ -59,6 +48,10 @@ end
 
 desc "build"
 task :build do
+  # file "gvimrc_linux.vim"
+  # file "testdata" do
+    # cp Dir["standard_data/.data"], "testdata" 
+  # end
   ['gvimrc_linux.vim.tmp', 'vimrc_linux.vim.tmp' ].each do |file|
     s = File.read(file)
     s = s.gsub('git@github.com:t9md','t9md').gsub(/\.git$/,'')
@@ -86,8 +79,8 @@ task :install do
     exit 1
   end
 
-  sh "cp vimrc_#{os}.vim ~/.vimrc"
-  sh "cp gvimrc_#{os}.vim ~/.gvimrc"
-  sh "cp vimrc.local.vim ~/.vimrc.local.vim"
-  sh "cp -r vim ~/.vim"
+  cp "vimrc_#{os}.vim", "~/.vimrc", :verbose => true
+  cp "gvimrc_#{os}.vim", "~/.gvimrc", :verbose => true
+  cp "vimrc.local.vim", "~/.vimrc.local.vim", :verbose => true
+  cp_r "vim/*", "~/.vim/"
 end
