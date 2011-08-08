@@ -14,9 +14,9 @@ Setup
 
 ### install
 
-    $ rake install os=linux
+    $ rake install
   or
-    $ rake install os=mac
+    $ rake install
 
 ### install bundles(vim-plugin)
 
@@ -307,15 +307,3 @@ Unite
     nnoremap <silent> <Space><Space> :<C-u>Unite -start-insert buffer<CR>
     nnoremap <silent> <C-p> :<C-u>Unite file_mru -buffer-name=files<CR>
 
-CommandT
-----------------------------------
-* install
-    if which rvm >/dev/null 2>&1; then rvm system exec rake make; else rake make; fi
-
-### key
-    <Space>f   現在のディレクトリから
-    <Space>F   バッファのディレクトリから
-
-### setting
-    nnoremap <Space>f :CommandT<CR>
-    nnoremap <Space>F :CommandT %:p:h<CR>
