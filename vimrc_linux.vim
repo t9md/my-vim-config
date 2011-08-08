@@ -17,7 +17,6 @@ call pathogen#infect()
 "-----------------------------------------------------------------
 let g:enable_swap_colon = 1 " US key board
 let g:loaded_gist_vim   = 1 " gist is danger
-let g:phrase_author     = expand("$USER")
 let g:loaded_nerdtree_plugin_easymove = 0
 let g:loaded_nerdtree_plugin_local_mapping = 1
 
@@ -73,8 +72,9 @@ if exists('&ambiwidth')
   set ambiwidth=double
 endif
 
-if filereadable(expand("~/.vimrc.local.vim"))
-    source ~/.vimrc.local.vim
+let $MYVIMRC_LOCAL = expand("~/.vimrc.local.vim")
+if filereadable($MYVIMRC_LOCAL)
+    exe "source " . $MYVIMRC_LOCAL
 endif
 
 " macvim-kaoriya workaround
@@ -223,10 +223,6 @@ endif
 nnoremap <Space>vs :<C-u>exe 'VimShellPop ' . expand("%:h")<CR>
 nnoremap <Space>vf :<C-u>VimFilerSimple<CR>
 
-nnoremap <silent> <Space>/ :nohlsearch<CR>
-nnoremap <silent> <Space>c  :set list!\|HighlightTrailingWhiteSpace<CR>
-nnoremap <silent> <Space>n  :set number!<CR>
-nnoremap <silent> <Space>w  :set wrap!<CR>
 
 nnoremap Y y$
 xnoremap Q gq
@@ -236,8 +232,8 @@ set listchars=tab:▸\ ,eol:¬ " Use the same symbols as TextMate for tabstops a
 
 nmap     <silent> <Leader>f  <Plug>(CheckFileTypeAtCursor)
 
-nnoremap <silent> M  :PhraseEdit<CR>
-xnoremap <silent> M  :PhraseCreate<CR>
+nmap M <Plug>(phrase#edit)
+xmap M <Plug>(phrase#create)
 
 nnoremap gc `[V`]
 xnoremap gc :<C-u>normal gc<CR>
@@ -262,8 +258,8 @@ xnoremap <silent> <M-r>      :QuickRun<CR>
 inoremap <silent> <M-r> <C-o>:<C-u>QuickRun<CR>
 
 nnoremap <Space>h  :<C-u>help<Space><C-r><C-W><CR>
-nnoremap <Space>.  :<C-u>edit $MYVIMRC<CR>
-
+nnoremap <Space>..  :<C-u>edit $MYVIMRC<CR>
+nnoremap <Space>.l  :<C-u>edit $MYVIMRC_LOCAL<CR>
 
 " ResizeWin plugin
 " Resize window easily
@@ -278,7 +274,6 @@ nmap <M-o> <Plug>ZoomWin
 
 " I'm not use HML moving  so I prefe use this key for another purpose.
 nnoremap <silent> H :NERDTreeFind<CR>
-
 
 nmap <silent> zl <Plug>(FoldcolumnIncrease)
 nmap <silent> zh <Plug>(FoldcolumnDecrease)
@@ -301,18 +296,10 @@ function! Capture(cmd)"{{{
   return __
 endfunction"}}}
 
-function! ToggleOption(optname,...) "{{{
-  let optvar = '&'.a:optname
-  let cmd_toggle = 'let '.optvar.' = !'.optvar
-  exe cmd_toggle
-
-  let cmd_status = 'let status = '.optvar.' ? "ON" : "OFF"'
-  exe cmd_status
-
-  echohl Function
-  let msg = a:0 > 0 ? a:1 : optvar.": "
-  echo msg.status
-  echohl Normal
+function! s:toggle_option(opt) "{{{
+  exe "set inv" . a:opt
+  let status = eval("&".a:opt) ? "ON" : "OFF"
+  echo "set " . a:opt . ": " . status
 endfunction "}}}
 
 function! s:TransposeWindow()"{{{
@@ -323,15 +310,20 @@ function! s:TransposeWindow()"{{{
   endif
 endfunction"}}}
 
+nnoremap <silent> <Space>c  :set list!\|HighlightTrailingWhiteSpace<CR>
+nnoremap <silent> <Space>n  :<C-u>call <SID>toggle_option('number')<CR>
+nnoremap <silent> <Space>w  :<C-u>call <SID>toggle_option('wrap')<CR>
+nnoremap <silent> <Space>/  :<C-u>call <SID>toggle_option('hlsearch')<CR>
+nnoremap <silent> <Space>n  :<C-u>call <SID>toggle_option('number')<CR>
+command! TogglePaste   :call <SID>toggle_option('paste')
+command! ToggleSpell   :call <SID>toggle_option('spell')
+
 command! GitPush       :Git  push -u origin master
-command! PasteToggle   :call ToggleOption('paste', "Paste Mode : ")
-command! WrapToggle    :call ToggleOption('wrap')
-command! NumberToggle  :call ToggleOption('number')
-command! SpellToggle   :call ToggleOption('spell')
 command! InsertTmp     :r /tmp/memo.tmp
 command! SudoWrite     write !sudo tee %
 command! HelptagUpdate call pathogen#helptags()
 command! FdmMarker     :set fdm=marker
+
 command! -nargs=* -complete=mapping AllMaps map <args> | map! <args> | lmap <args>
 
 command! Cp932     edit ++enc=cp932
@@ -412,7 +404,7 @@ augroup my_config "{{{
 
   au BufNewFile,BufReadPost .vimrc nnoremap <buffer> <M-r> :so %<CR>
   au BufNewFile,BufRead *.json              set  filetype=json
-  au BufNewFile,BufRead {Rakefile,*.rake}   let b:phrase_filetype = 'rake'
+  au BufNewFile,BufRead {Rakefile,*.rake}   let b:phrase_ext = 'rake'
   au BufNewFile,BufRead /tmp/*vimperator*   setlocal filetype=textile bufhidden=delete
 
   " Chef
@@ -507,6 +499,7 @@ augroup my_config "{{{
 augroup END"}}}
 
 " Experiment {{{1
+nnoremap <F11> :<C-u>TmuxDo ack-grep <C-r><C-w><CR>
 "
 " Color and ColorScheme {{{1
 "-------------------------------------------------
@@ -516,6 +509,7 @@ if g:GUI_MODE
   " colorscheme newspaper
   colorscheme tomorrow_night
   " colorscheme github256
+  " colorscheme github
   " colorscheme molokai
   " colorscheme lucius
 else
@@ -541,16 +535,65 @@ nnoremap <F12> :IndentGuidesToggle<CR>
 let g:indent_guides_guide_size=1
 
 " OpenBrowser: {{{2
-let g:netrw_nogx = 1 " disable netrw's gx mapping.
 
+" copy and paste from open-browser.vim
+function! s:get_selected_text() "{{{
+    let save_z = getreg('z', 1)
+    let save_z_type = getregtype('z')
+    try
+        normal! gv"zy
+        return @z
+    finally
+        call setreg('z', save_z, save_z_type)
+    endtry
+endfunction "}}}
+
+let g:openbrowser_search_engines = {
+      \ 'google': 'http://google.com/search?q={query}',
+      \ 'nova': 'http://google.com/search?q=site:docs.openstack.org {query}',
+      \ 'novawiki': 'http://wiki.openstack.org/StartingPage?action=fullsearch\&fullsearch=Text\&value={query}',
+      \ 'chef': 'http://wiki.opscode.com/dosearchsite.action?queryString={query}',
+      \ 'yahoo': 'http://search.yahoo.com/search?p={query}',
+      \ }
+
+let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
 xmap gx <Plug>(openbrowser-smart-search)
 
 nmap go <Plug>(openbrowser-open)
 xmap go <Plug>(openbrowser-open)
 
-nmap gs <Plug>(openbrowser-search)
-xmap gs <Plug>(openbrowser-search)
+function! s:set_search_engine(type)
+  let g:openbrowser_default_search = a:type
+  " endif
+endfunction
+
+function! s:openbrowser_search_from(engine, mode)
+  if a:mode == 'v'
+    call openbrowser#search(<SID>get_selected_text(), a:engine)
+  else
+    call openbrowser#search(expand('<cword>'), a:engine)
+  endif
+endfunction
+
+command!
+\   -nargs=1 -complete=customlist,<SID>engine_list
+\   SetSearchEngine
+\   call <SID>set_search_engine(<q-args>)
+
+function! s:engine_list(_1, _2, _3) "{{{
+   return keys(g:openbrowser_search_engines)
+endfunction
+
+nmap gss <Plug>(openbrowser-search)
+xmap gss <Plug>(openbrowser-search)
+
+nnoremap gsn :<C-u>call <SID>openbrowser_search_from('nova','n')<CR>
+xnoremap gsn :<C-u>call <SID>openbrowser_search_from('nova','v')<CR>
+nnoremap gsw :<C-u>call <SID>openbrowser_search_from('novawiki','n')<CR>
+xnoremap gsw :<C-u>call <SID>openbrowser_search_from('novawiki','v')<CR>
+nnoremap gsc :<C-u>call <SID>openbrowser_search_from('chef','n')<CR>
+xnoremap gsc :<C-u>call <SID>openbrowser_search_from('chef','v')<CR>
 
 " nnoremap <silent> gt :TryIt<CR>
 " xnoremap <silent> gt :TryItSelection<CR>
@@ -560,6 +603,7 @@ xnoremap <silent> gp  :PhraseCreate<CR>
 
 nnoremap <silent> gh :NERDTreeFind<CR>
 nnoremap ge :<C-u>Eijiro <C-r><C-w><CR>
+xnoremap ge :<C-u>call ref#ref("alc " . <SID>get_selected_text())<CR>
 
 " Tmux2Vim {{{2
 " let tasks = [
@@ -620,6 +664,7 @@ function! g:fthook.nerdtree()"{{{
   nnoremap <silent> <buffer>  f    :call <SID>normal_other("80j")<CR>
   nnoremap <silent> <buffer>  b    :call <SID>normal_other("80k")<CR>
   nnoremap <silent> <buffer>  gh   :<C-u> NERDTreeClose<CR>
+  nnoremap <silent> <buffer>  H    :<C-u> NERDTreeClose<CR>
   nnoremap <silent> <buffer>  ~          :<C-u>NERDTree $HOME<CR>
   nnoremap <silent> <buffer>  <Leader>g  :<C-u>NERDTree /var/lib/gems/1.8/gems<CR>
   nnoremap <silent> <buffer>  <Leader>b  :<C-u>NERDTree ~/.vim/bundle<CR>
@@ -631,6 +676,7 @@ endfunction"}}}
 function! g:fthook.unite() "{{{
   nmap <buffer>m       <Plug>(unite_toggle_mark_current_candidate)
   xmap <buffer>m       <Plug>(unite_toggle_mark_selected_candidates)
+
   imap <buffer> <C-g>  <Plug>(unite_exit)
   nmap <buffer> <C-g>  <Plug>(unite_exit)
   " imap <buffer> <C-e>  <Plug>(unite_narrowing_path)
@@ -644,6 +690,7 @@ function! g:fthook.unite() "{{{
   nmap <silent> <buffer> <M-j>  <Plug>(unite_rotate_next_source)
   nmap <silent> <buffer> <M-k>  <Plug>(unite_rotate_previous_source)
 
+  " nnoremap <silent> <buffer> <F2> :call unite#start(['source'])<CR>
   nnoremap <silent> <buffer> <expr> B    unite#do_action('bookmark')
   nnoremap <silent> <buffer>  f    :call <SID>normal_other("80j")<CR>
   nnoremap <silent> <buffer>  b    :call <SID>normal_other("80k")<CR>
@@ -653,6 +700,10 @@ function! g:fthook.unite() "{{{
   nnoremap <silent> <buffer>  zM   :call <SID>normal_other("zM")<CR>
   nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('below')
   inoremap <silent> <buffer> <expr> <C-j> unite#do_action('below')
+  nnoremap <silent> <buffer> <expr> <C-k> unite#do_action('above')
+  inoremap <silent> <buffer> <expr> <C-k> unite#do_action('above')
+  " nnoremap <silent> <buffer> <expr> <C-h> unite#do_action('left')
+  " inoremap <silent> <buffer> <expr> <C-h> unite#do_action('left')
   nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('right')
   inoremap <silent> <buffer> <expr> <C-l> unite#do_action('right')
 
@@ -700,6 +751,7 @@ xnoremap   <M-a>h    :Align "=>"<CR>
 
 " Ack: {{{2
 " let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+let g:ackprg="ack-grep -H --nocolor --nogroup --column"
 " Underlinetag:  {{{2
 nnoremap <silent> <Space>] :<C-u>UnderlineTagToggle<CR>
 
@@ -754,6 +806,9 @@ call unite#custom_max_candidates('file_rec', 1500)
 call unite#custom_filters('file_rec',
             \ ['converter_relative_word', 'matcher_default',
             \  'sorter_default', 'converter_relative_abbr'] )
+call unite#custom_filters('file_rec/async',
+            \ ['converter_relative_word', 'matcher_default',
+            \  'sorter_default', 'converter_relative_abbr'] )
 
 if !exists("g:unite_source_ack_targetdir_shortcut")
     let g:unite_source_ack_targetdir_shortcut = {}
@@ -769,7 +824,8 @@ function! s:set_SearchCmd(dict)
 endfunction
 call s:set_SearchCmd(g:unite_source_ack_targetdir_shortcut)
 
-function! s:build_candidate(prefix, dict, cmd_format)
+" Unite_my_menu: {{{
+function! s:build_candidate(prefix, dict, cmd_format)"{{{
   let ret = []
   for [key,val] in items(a:dict)
     if key =~ '/' | continue | endif
@@ -781,36 +837,141 @@ function! s:build_candidate(prefix, dict, cmd_format)
           \ })
   endfor
   return ret
-endfunction
-
+endfunction"}}}
 let s:unite_source = { "name": 'my_menu' }
-function! s:unite_source.gather_candidates(args, context)
+function! s:unite_source.gather_candidates(args, context)"{{{
   return 
-        \ s:build_candidate('[rec ] ', g:unite_source_ack_targetdir_shortcut, "Unite file_rec:%s -buffer-name=files") +
+        \ s:build_candidate('[rec ] ', g:unite_source_ack_targetdir_shortcut, "Unite file_rec/async:%s -buffer-name=files") +
         \ s:build_candidate('[Ack ] ', g:unite_source_ack_targetdir_shortcut, "Unite ack:%s") +
         \ s:build_candidate('[rake] ', {"rake": "rake"}, "Unite %s")
         " \ s:build_candidate('[cmdT] ', g:unite_source_ack_targetdir_shortcut, "CommandT %s")
-endfunction
+endfunction"}}}
 call  unite#define_source(s:unite_source)
 unlet s:unite_source
+"}}}
+" Unite_Variables: {{{
+function! s:split_var_and_value(val)"{{{
+   let idx = stridx(a:val, ' ')
+   let varname = a:val[0 :idx-1]
+   let value_part = matchstr(strpart(a:val, idx),'\v\zs\S.*\ze')
+   return [varname, value_part]
+endfunction"}}}
+
+function! s:vars(scope)"{{{
+  let cmd = 'let '.a:scope.':'
+  redir => _
+  silent exe cmd
+  redir END
+  return map(split(_, '\n'), 's:split_var_and_value(v:val)')
+endfunction"}}}
+
+let s:unite_source = {
+      \ "name": 'variables',
+      \ "hooks": {},
+      \ "description": "variables"
+      \ }
+
+function! s:unite_source.hooks.on_init(args, context) "{{{
+  let lis = []
+  for scope in ['v', 'g', 'v']
+    for [varname, value] in s:vars(scope)
+      if scope == 'g'
+        let varname = "g:" . varname
+      endif
+      call add(lis, [varname, value])
+    endfor
+  endfor
+  let a:context.source__vars = lis
+endfunction"}}}
+
+function! s:truncate(val)"{{{
+  return len(a:val) < 40
+        \ ? a:val
+        \ : a:val[0 : 40] . ' ...'
+  endif
+endfunction"}}}
+function! s:unite_source.gather_candidates(args, context)"{{{
+  let candidates = []
+  for [varname,val] in a:context.source__vars
+    call add(candidates, {
+          \ "word": printf('%-30s - %s',varname, s:truncate(val)),
+          \ "source": "variables",
+          \ "kind": "command",
+          \ })
+  endfor
+  return candidates
+endfunction"}}}
+
+call  unite#define_source(s:unite_source)
+unlet s:unite_source
+" }}}
+
+" UniteFunction: {{{
+function! s:functions()"{{{
+  let cmd = 'verbose function'
+  redir => _
+  silent exe cmd
+  redir END
+  let output = split(_, '\n')
+
+  let result = []
+  while !empty(output)
+    let [funcname, filename ] = remove(output,0,1)
+    let funcname = matchstr(funcname, '\vfunction \zs.*')
+    let filename = matchstr(filename, '\vLast set from \zs.*')
+    call add(result, {
+          \ "name": funcname,
+          \ "path": filename,
+          \ })
+  endwhile
+  return result
+endfunction"}}}
+let s:unite_source = { 
+      \ "name": 'function',
+      \ "hooks": {},
+      \ "description": "function",
+      \ }
+function! s:unite_source.gather_candidates(args, context)"{{{
+  let candidates = []
+  for body in s:functions()
+    call add(candidates, {
+          \ "word": body.name,
+          \ "abbr": printf("%-30s - %s", body.name, body.path),
+          \ "source": "function",
+          \ "kind": "jump_list",
+          \ "action__path": fnamemodify(body.path, ":p"),
+          \ "action__pattern" : substitute(body.name, '\v\<SNR\>\d+_(.*)', '\1', ''),
+          \ })
+  endfor
+  return candidates
+endfunction"}}}
+call  unite#define_source(s:unite_source)
+unlet s:unite_source
+" }}}
 
 nnoremap <silent> <C-z>          :<C-u>UniteResume<CR>
 nnoremap <silent> [unite]u       :<C-u>Unite<Space>
-nnoremap <silent> [unite]<M-u>   :<C-u>Unite file_mru<CR>
 nnoremap <silent> [unite]f       :<C-u>Unite -buffer-name=file file<CR>
 nnoremap <silent> [unite]d       :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
-nnoremap <silent> [unite]d       :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
-nnoremap <silent> [unite]m       :<C-u>Unite file_mru<CR>
-nnoremap <silent> [unite]l       :<C-u>Unite line<CR>
 nnoremap <silent> [unite]t       :<C-u>UniteWithCursorWord tag<CR>
 nnoremap <silent> [unite]a       :<C-u>UniteWithCursorWord -buffer-name=ack ack<CR>
+nnoremap <silent> [unite]s       :<C-u>Unite source<CR>
 nnoremap <silent> <Space><Space> :<C-u>Unite buffer<CR>
 nnoremap <silent> <M-f>          :<C-u>Unite my_menu<CR>
+nnoremap <silent> [unite]rm  :<C-u>UniteWithCursorWord -start-insert ref/man<CR>
+nnoremap <silent> [unite]rr  :<C-u>UniteWithCursorWord -start-insert ref/refe<CR>
+nnoremap <silent> [unite]rp  :<C-u>UniteWithCursorWord -start-insert ref/pydoc<CR>
+nnoremap <silent> <Space>p  :<C-u>Unite phrase -start-insert<CR>
+nnoremap <silent> <Space>o  :<C-u>Unite outline -start-insert<CR>
+nnoremap <silent> <Space>b :<C-u>Unite -start-insert buffer<CR>
+nnoremap <silent> <C-p> :<C-u>Unite file_mru -buffer-name=files<CR>
 
 nnoremap <silent> <Space>g       :<C-u>UniteWithCursorWord tag<CR>
 nnoremap <silent> <Space>r       :<C-u>Unite rake<CR>
-nnoremap <silent> <Space>F       :<C-u>exe  "Unite file_rec:" . expand('%:p:h') . " -buffer-name=files"<CR>
-nnoremap <silent> <Space>f       :<C-u>Unite file_rec -buffer-name=files<CR>
+nnoremap <silent> <Space>F       :<C-u>exe  "Unite file_rec/async:" . expand('%:p:h') . " -buffer-name=files"<CR>
+nnoremap <silent> <Space>f       :<C-u>Unite file_rec/async -buffer-name=files<CR>
+" nnoremap <silent> <Space>F       :<C-u>exe  "Unite file_rec:" . expand('%:p:h') . " -buffer-name=files"<CR>
+" nnoremap <silent> <Space>f       :<C-u>Unite file_rec -buffer-name=files<CR>
 
 function! s:escape_visual(...) "{{{
   let escape = a:0 ? a:1 : ''
@@ -838,17 +999,38 @@ nnoremap <silent> <Space>A  :<C-u>UniteResume ack<CR>
 
 command! RTP         :Unite output:echo\ join(split(&rtp,","),"\\n")
 command! ScriptNames :Unite output:scriptnames
+command! Occur :exe "Unite -input=" . escape(@/, ' ') . " line"
+command! Function :Unite output:function
+command! -nargs=1 AckUnite :Unite ack::<q-args>
 
 " unite line
 " emacs-occur-like
 nnoremap <Space>l       :<C-u>UniteWithCursorWord line<CR>
 xnoremap <Space>l  <Esc>:<C-u>exe "Unite -input=" . <SID>escape_visual(' '). " line"<CR>
+" nnoremap <Space>o :<C-u>Occur<CR>
 
 " Emacs's incremental-search forward and backward to occur with <C-o>
 " =====================================================
-cnoremap <expr> <C-o>  getcmdtype() =~# '[/?]'
-      \ ? '<Esc>:<C-u>nohlsearch\|exe "Unite -input=" . escape(@/," ") . " line"<CR>'
+let s:cmdtypes = {
+      \ 'search_forward': '/',
+      \ 'search_backwward': '?',
+      \ 'search': '[/?]',
+      \ 'ex': ':'
+      \ }
+function! s:is_search_mode(cmdtype)
+  return getcmdtype() =~# get(s:cmdtypes, a:cmdtype)
+endfunction
+
+cnoremap <expr> <C-o> <SID>is_search_mode('search')
+      \ ? '<Esc>:<C-u>nohlsearch\|Occur<CR>'
       \ : "\<C-o>"
+
+" serch mode で / をエスケープ
+cnoremap <expr> / <SID>is_search_mode('search_forward') ? '\/' : '/'
+command! VimShellBuffer :exe "VimShellPop " . expand("%:h")
+" cnoremap <expr> vs <SID>is_search_mode('search_forward') ? 'vs' : "VimShellPop " .  expand("%:h")
+" cnoremap <expr> vs getcmdtype() == '/' ? 'vs' : "VimShellPop " .  expand("%:h")
+nnoremap <silent> [unite]b   :<C-u>Unite bookmark<CR>
 
 " cnoremap <expr> <C-o>  getcmdtype() == '/'
 " \ ? '<Esc>:<C-u>nohlsearch\|exe "Unite -input=" . escape(@/," ") . " line:forward"<CR>'
@@ -859,26 +1041,8 @@ cnoremap <expr> <C-o>  getcmdtype() =~# '[/?]'
 " occur(=Unite line) forward/backward
 nnoremap ]o :UniteWithCursorWord line:forward<CR>
 nnoremap [o :UniteWithCursorWord line:backward<CR>
-
-" serch mode で / をエスケープ
-cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
-cnoremap <expr> vs getcmdtype() == '/' ? 'vs' : "VimShellPop " .  expand("%:h")
-nnoremap <silent> [unite]b   :<C-u>Unite bookmark<CR>
-
-nnoremap <silent> [unite]rm  :<C-u>UniteWithCursorWord -start-insert ref/man<CR>
-nnoremap <silent> [unite]rr  :<C-u>UniteWithCursorWord -start-insert ref/refe<CR>
-nnoremap <silent> [unite]rp  :<C-u>UniteWithCursorWord -start-insert ref/pydoc<CR>
-" nnoremap <silent> <Space>r  :<C-u>Unite source -input=ref/<CR>
-
-nnoremap <silent> [unite]p  :<C-u>Unite phrase -start-insert<CR>
-nnoremap <silent> [unite]o  :<C-u>Unite outline -start-insert<CR>
-
-nnoremap <silent> <Space>p  :<C-u>Unite phrase -start-insert<CR>
-nnoremap <silent> <Space>o  :<C-u>Unite outline -start-insert<CR>
-
-" nnoremap <silent> <Space>b  :<C-u>Unite bookmark<CR>
-nnoremap <silent> <Space>b :<C-u>Unite -start-insert buffer<CR>
-nnoremap <silent> <C-p> :<C-u>Unite file_mru -buffer-name=files<CR>
+" nnoremap * :UniteWithCursorWord line:backward<CR>
+" nnoremap # :UniteWithCursorWord line:forward<CR>
 
 function! s:normal_other(cmd)
   silent wincmd p
@@ -898,7 +1062,6 @@ let g:unite_source_file_mru_limit = 200
 " http://d.hatena.ne.jp/thinca/20101027/1288190498 {{{
 " 環境変数の展開
 call unite#set_substitute_pattern('file', '\$\w\+', '\=eval(submatch(0))', 200)
-
 call unite#set_substitute_pattern('file', '[^~.]\zs/', '*/*', 20)
 call unite#set_substitute_pattern('file', '/\ze[^*]', '/*', 10)
 
@@ -943,8 +1106,8 @@ nmap ySS   <Plug>YSsurround
 nmap s     ysiw
 nmap S     ysiW
 nmap ss    yss
-nmap <M-s> ysiw
-nmap <M-S> ysiW
+" nmap <M-s> ysiw
+" nmap <M-S> ysiW
 xmap <M-s> <Plug>VSurround
 " xmap s     <Plug>VSurround
 let g:surround_custom_mapping = {}"{{{
@@ -1102,8 +1265,9 @@ let g:neocomplcache_omni_patterns.c      = '\%(\.\|->\)\h\w*'
 let g:neocomplcache_omni_patterns.cpp    = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
 
 " Other: {{{2
-let g:netrw_http_cmd = "elinks-for-vim"
-" nnoremap <silent> <Space><Space> :call BuffListWindow()<CR>
+let g:netrw_http_cmd = "elinks"
+let g:netrw_http_xcmd = "-dump -no-references >"
+
 " VimShell: {{{2
 nmap <F8> <Plug>(vimshell_split_switch)
 let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
@@ -1140,9 +1304,11 @@ function! ChefNerdTreeFind(env)"{{{
   endtry
 endfunction"}}}
 let g:chef = {}
-let g:chef.hooks = ['ChefNerdTreeFind']
+" let g:chef.hooks = ['ChefNerdTreeFind']
 let g:chef.any_finders = ['Attribute', 'Source', 'Recipe', 'Definition']
+
 function! s:ft_chef_hook()"{{{
+  call <SID>set_search_engine('chef')
   " Mouse:
   " Left mouse click to GO!
   nnoremap <buffer> <silent> <2-LeftMouse> :<C-u>ChefFindAny<CR>
@@ -1151,10 +1317,10 @@ function! s:ft_chef_hook()"{{{
 
   " Keyboard:
   nnoremap <buffer> <silent> <M-a> :<C-u>ChefFindAny<CR>
-  nnoremap <buffer> <silent> <M-f> :<C-u>ChefFindAnySplit<CR>
+  nnoremap <buffer> <silent> <M-s> :<C-u>ChefFindAnySplit<CR>
   nnoremap <buffer> <silent> <M-r> :<C-u>ChefFindRelated<CR>
   nnoremap <buffer> <silent> <CR>  :<C-u>ChefFindAny<CR>
-  let b:phrase_filetype = 'chef'
+  let b:phrase_ext = 'chef'
 endfunction"}}}
 
 " Vim Bundle {{{1
@@ -1176,8 +1342,8 @@ endfunction"}}}
 " # Bundle: vim-scripts/IndexedSearch
 " # Bundle: Lokaltog/vim-easymotion
 " Bundle: depuracao/vim-rdoc
-" Bundle: wincent/Command-T
-" BundleCommand: if which rvm >/dev/null 2>&1; then rvm system exec rake make; else rake make; fi
+" # Bundle: wincent/Command-T
+" # BundleCommand: if which rvm >/dev/null 2>&1; then rvm system exec rake make; else rake make; fi
 
 " Programming:
 " Bundle: scrooloose/nerdcommenter
@@ -1244,11 +1410,14 @@ endfunction"}}}
 " # Bundle: kana/vim-fakeclip
 " # Bundle: vim-scripts/multisearch.vim
 
+" #Bundle: Shougo/vimproc 654d971b70d1878462c7
 " Bundle: Shougo/vimproc
 " Bundlecommand: [ "$(uname -s)" = "Darwin" ] && make -f make_mac.mak ||  make -f make_gcc.mak
 " Bundle: Shougo/vimshell
+" ##Bundle: Shougo/unite.vim eba13d241c4a45ce66ce
 " Bundle: Shougo/unite.vim
 " Bundle: Shougo/vimfiler
+" #Bundle: Shougo/neocomplcache 6ab0baafadec7ebcbe94
 " Bundle: Shougo/neocomplcache
 "
 " Bundle: mattn/gist-vim

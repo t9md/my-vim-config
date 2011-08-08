@@ -6,7 +6,7 @@ function! s:BundleGet() "{{{
 
         let repo = matchstr(getline('.'), 'Bundle:\s\+\zs.*')
         if repo != ''
-            let local_name = fnamemodify(repo, ':t:r')
+            let local_name = fnamemodify(repo, ':t')
             if isdirectory(local_name)
                 let cmd = 'cd ' . local_name
                 echo cmd
