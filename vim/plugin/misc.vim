@@ -118,42 +118,6 @@ function! s:CDtoCurrentFile()
 endfunction
 
 "}}}
-" Xmpfilter Utility: {{{
-"============================================================
-function! Xmpfilter() range
-    let cursor_pos = getpos(".")
-    let wintop_pos = getpos('w0')
-    set lazyredraw
-
-    execute ":" . a:firstline . "," . a:lastline . "!xmpfilter -a"
-
-    call setpos('.', wintop_pos)
-    normal zt
-    call setpos('.', cursor_pos)
-    set nolazyredraw
-    redraw
-endfunction
-
-function! XmpCommentToggle() range
-    let ruby_eval_str = " # =>"
-    let cursor_pos = getpos(".")
-    let wintop_pos = getpos('w0')
-    set lazyredraw
-    for line in range(a:firstline,a:lastline)
-        let lineStr = getline(line)
-        let found = strridx(lineStr, ruby_eval_str)
-        let lineStr = found == -1
-                    \ ? lineStr . ruby_eval_str
-                    \ : strpart(lineStr, 0, found)
-        call setline(line, lineStr)
-    endfor
-    call setpos('.', wintop_pos)
-    normal zt
-    call setpos('.', cursor_pos)
-    set nolazyredraw
-    redraw
-endfunction
-" }}}
 " CheckFileType: {{{
 "============================================================
 command! -nargs=0 CheckFileTypeAtCursor :call <SID>CheckFileTypeAtCursor()

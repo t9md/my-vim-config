@@ -14,7 +14,7 @@ if g:Is_linux
     let &guifont= s:font_family.' '.s:font_size
   endfunction "}}}
 
-  let s:font_size = 13
+  let s:font_size = 11
   let s:font_family = 'VL ゴシック'
   " let s:font_family = 'Courier New'
   " let s:font_family = 'Monaco'
@@ -86,7 +86,7 @@ if g:Is_mac
   set guifont=Monaco:h14
 endif
 
-if g:colors_name == "molokai"
-  highlight Special guifg=#66D9EF guibg=bg gui=NONE
-end
+" if g:colors_name == "molokai"
+  " highlight Special guifg=#66D9EF guibg=bg gui=NONE
+" end
 
