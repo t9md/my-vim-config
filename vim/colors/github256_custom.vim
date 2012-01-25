@@ -299,6 +299,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 	call <SID>X("LineNr", "666666", "eaeaea", "")
 	call <SID>X("ModeMsg", "", "", "bold")
 	" call <SID>X("Normal", "000000", "f8f8ff", "")
+  " call <SID>X("Normal", "000000", "f8f7ff", "")
   call <SID>X("Normal", "000000", "f4f7fe", "")
 
 	" call <SID>X("Folded"     , "666666" , "eaeaea" , "")
@@ -311,6 +312,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 	call <SID>X("Visual", "", "ffff86", "")
 	call <SID>X("Visual", "", "fcfbac", "")
 " hi Visual         guifg=NONE  guibg=#403D3D
+
 
 	" call <SID>X("LineNr", "666666", "eaeaea", "")
 	" call <SID>X("Pmenu", "666666", "eaeada", "")
