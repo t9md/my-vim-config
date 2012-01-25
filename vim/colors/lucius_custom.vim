@@ -17,7 +17,7 @@ hi clear
 if exists("syntax_on")
     syntax reset
 endif
-let colors_name="lucius_custom"
+let g:colors_name="lucius_custom"
 
 " Some other colors to save
 " blue: 3eb8e5
@@ -30,7 +30,7 @@ let colors_name="lucius_custom"
 " Base color
 " ----------
 hi Normal           guifg=#e0e0e0           guibg=#202020
-" hi Normal           ctermfg=253             ctermbg=235
+hi Normal           ctermfg=253             ctermbg=235
 
 
 " Comment Group

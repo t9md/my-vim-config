@@ -15,8 +15,7 @@ VIMDIR_PREPARE = File.expand_path("./vim")
 CLEAN << FileList['*.tmp','*.vim', 'vim'].exclude("vimrc.local.vim")
 
 desc "build_all"
-task :build_all => [:clean, :prepare, :build] do
-end
+task :build_all => [:clean, :prepare, :build]
 
 desc "prepare"
 task :prepare do
@@ -29,7 +28,7 @@ task :prepare do
       sh "cp -r #{dir} #{VIMDIR_PREPARE}/"
     end
     %w(bundle plugin doc quicktag tryit phrase).each do |dir|
-      sh "mkdir #{dir}"
+      mkdir dir
     end
     cp "#{VIMDIR_SRC}/plugin/misc.vim", "plugin/"
   end
@@ -48,10 +47,6 @@ end
 
 desc "build"
 task :build do
-  # file "gvimrc_linux.vim"
-  # file "testdata" do
-    # cp Dir["standard_data/.data"], "testdata" 
-  # end
   ['gvimrc_linux.vim.tmp', 'vimrc_linux.vim.tmp' ].each do |file|
     s = File.read(file)
     s = s.gsub('git@github.com:t9md','t9md').gsub(/\.git$/,'')
@@ -59,15 +54,15 @@ task :build do
     mac_file = linux_file.sub('_linux','_mac')
 
     File.open(linux_file, 'w') { |f| f.puts s }
-    File.open(mac_file  , 'w') { |f| f.puts s.gsub('M-', 'D-') }
+    File.open(mac_file  , 'w') do |f|
+      f.puts s.gsub(/(<|-)(M-)/) { $1 + "D-" }
+    end
   end
 end
 
 desc "install"
 task :install do
-  unless File.directory? VIMDIR
-    Dir.mkdir VIMDIR
-  end
+  Dir.mkdir VIMDIR unless File.directory? VIMDIR
 
   os = case RUBY_PLATFORM
        when /linux/ then "linux"
@@ -79,8 +74,8 @@ task :install do
     exit 1
   end
 
-  cp "vimrc_#{os}.vim", "~/.vimrc", :verbose => true
-  cp "gvimrc_#{os}.vim", "~/.gvimrc", :verbose => true
-  cp "vimrc.local.vim", "~/.vimrc.local.vim", :verbose => true
-  cp_r "vim/*", "~/.vim/"
+  cp "vimrc_#{os}.vim" , "~/.vimrc"          , :verbose => true
+  cp "gvimrc_#{os}.vim", "~/.gvimrc"         , :verbose => true
+  cp "vimrc.local.vim" , "~/.vimrc.local.vim", :verbose => true
+  cp_r "vim/*"         , "~/.vim/"
 end

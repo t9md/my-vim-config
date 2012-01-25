@@ -1,3 +1,4 @@
 trash
 *.swp
+.local.vimrc
 vim/autoload/pathogen.vim
